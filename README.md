@@ -1,16 +1,34 @@
-# clinica_app_taller
+# Aplicación móvil de Gestión de Emergencias
 
-A new Flutter project.
+Esta es una aplicación móvil desarrollada con Flutter para gestionar la información relacionada con las emergencias en un área médica. La aplicación proporciona diversas funcionalidades para facilitar la atención y el seguimiento de los pacientes en situaciones de emergencia.
 
-## Getting Started
+## Características principales
 
-This project is a starting point for a Flutter application.
+- **Gestión de pacientes**: Permite registrar y gestionar la información de los pacientes del área de emergencias.
 
-A few resources to get you started if this is your first Flutter project:
+- **Registro de personal médico**: Permite gestionar la información del personal médico, incluyendo roles y privilegios.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Reconocimiento facial de pacientes**: Permite capturar fotografías del rostro de los pacientes para identificarlos y obtener sus datos rápidamente.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Gestión de emergencias**: Proporciona un módulo para gestionar las emergencias recepcionadas, con información detallada de la emergencia y el paciente.
+
+- **Historia clínica electrónica**: Permite administrar la historia clínica de los pacientes, asegurados y nuevos.
+
+## Requisitos de instalación
+
+- Flutter SDK: Se requiere tener instalado el SDK de Flutter.
+- Ejecutar `flutter pub get` para instalar las dependencias necesarias.
+
+## Instrucciones de uso
+
+1. Clonar o descargar el repositorio.
+2. Abrir el proyecto en un IDE compatible con Flutter.
+3. Conectar un dispositivo móvil o iniciar un emulador.
+4. Ejecutar `flutter run` para compilar y lanzar la aplicación en el dispositivo/emulador.
+
+## Contribuciones
+
+- Realizar un fork del repositorio.
+- Crear una rama nueva para los cambios.
+- Realizar los cambios y commits necesarios.
+- Enviar un pull request con los cambios propuestos.
