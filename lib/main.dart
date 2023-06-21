@@ -1,11 +1,14 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:clinica_app_taller/route/routes_app.dart';
 import 'package:clinica_app_taller/services/services.dart';
 
-void main() => runApp(const AppState());
-
+void main() async {
+  await dotenv.load(fileName: '.env');
+  runApp(const AppState());
+} 
 class AppState extends StatelessWidget {
   const AppState({
     super.key,

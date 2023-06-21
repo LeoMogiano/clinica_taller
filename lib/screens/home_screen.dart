@@ -102,14 +102,14 @@ class HomeScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) =>  EmergencyScreen(),
+                                    builder: (context) =>  const EmergencyScreen(),
                                   ),
                                 );
                               },
                             ),
                             const SizedBox(width: 18.0),
                             ButtonHome(
-                              title: "Face ID",
+                              title: "Detección Facial",
                               imagePath: 'assets/ident.png',
                               width: (size.width - 50) / 2,
                               height: 170,

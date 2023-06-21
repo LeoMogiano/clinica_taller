@@ -37,8 +37,7 @@ class UserScreen extends StatelessWidget {
                     child: FutureBuilder<List<User>>(
                       future: getInfo,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
@@ -112,9 +111,9 @@ class UserScreen extends StatelessWidget {
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
-    super.key,
+    Key? key,
     required this.user,
-  });
+  }) : super(key: key);
 
   final User user;
 
@@ -131,25 +130,42 @@ class ProfileCard extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   elevation: 0.0,
                   child: ClipRRect(
+                    key: user.foto != null ? Key(user.id.toString()) : null,
                     borderRadius: BorderRadius.circular(175.0),
-                    child: Image.asset(
-                      'assets/bale.jpg',
-                      width: 275.0,
-                      height: 275.0,
-                      fit: BoxFit.cover,
-                    ),
+                    child: user.foto != null
+                        ? Image.network(
+                            user.foto!,
+                            width: 275.0,
+                            height: 275.0,
+                            fit: BoxFit.cover,
+                          )
+                        : const Image(
+                            image: AssetImage('assets/bale.jpg'),
+                            width: 275.0,
+                            height: 275.0,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 );
               },
             );
           },
           child: ClipRRect(
+            key: user.foto != null ? Key(user.id.toString()) : null,
             borderRadius: BorderRadius.circular(25.0),
-            child: Image.asset(
-              'assets/bale.jpg',
-              width: 50.0,
-              height: 50.0,
-            ),
+            child: user.foto != null
+                ? Image.network(
+                    user.foto!,
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  )
+                : const Image(
+                    image: AssetImage('assets/bale.jpg'),
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
           ),
         ),
         title: Text(user.name),
@@ -169,7 +185,9 @@ class ProfileCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => PerfilScreen(user: user,),
+                    builder: (context) => PerfilScreen(
+                      user: user,
+                    ),
                   ),
                 );
               },

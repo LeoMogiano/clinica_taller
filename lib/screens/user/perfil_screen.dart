@@ -3,7 +3,7 @@ import 'package:clinica_app_taller/models/models.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
 class PerfilScreen extends StatelessWidget {
-  const PerfilScreen({super.key, this.user}) ;
+  const PerfilScreen({super.key, this.user});
 
   final User? user;
 
@@ -42,19 +42,13 @@ class PerfilScreen extends StatelessWidget {
                               const SizedBox(height: 22.0),
                               Center(
                                 child: CircleAvatar(
+                                   key: user?.foto != null ? Key(user!.id.toString()) : null,
                                   radius: 100.0,
-                                  backgroundImage:
-                                      const AssetImage('assets/bale.jpg'),
+                                  backgroundImage: user?.foto != null
+                                      ? NetworkImage(user!.foto!)
+                                      : const AssetImage('assets/bale.jpg') as ImageProvider,
                                   backgroundColor: Colors.transparent,
-                                  foregroundColor: Colors.transparent,
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      'assets/bale.jpg',
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    ),
-                                  ),
+                                  foregroundColor: Colors.transparent
                                 ),
                               ),
                               Padding(
@@ -95,7 +89,8 @@ class PerfilScreen extends StatelessWidget {
                                         const SizedBox(height: 16.0),
                                         _personalInfoRow(
                                           label1: 'Carnet de Identidad',
-                                          value1: user!.carnet ?? 'No especificado',
+                                          value1:
+                                              user!.carnet ?? 'No especificado',
                                           label2: 'Fecha de Nacimiento',
                                           value2: user!.fechaNac != null
                                               ? '${user!.fechaNac!.day}/${user!.fechaNac!.month}/${user!.fechaNac!.year}'
@@ -103,28 +98,34 @@ class PerfilScreen extends StatelessWidget {
                                         ),
                                         _personalInfoRow(
                                           label1: 'Teléfono',
-                                          value1: user!.telefono ?? 'No especificado',
+                                          value1: user!.telefono ??
+                                              'No especificado',
                                           label2: 'Email',
                                           value2: user!.email,
                                         ),
                                         _personalInfoRow(
                                           label1: 'Rol',
-                                          value1: user!.role ?? 'No especificado',
+                                          value1:
+                                              user!.role ?? 'No especificado',
                                           label2: 'Grupo',
-                                          value2: user!.group ?? 'No especificado',
+                                          value2:
+                                              user!.group ?? 'No especificado',
                                         ),
                                         _personalInfoRow(
                                           label1: 'Especialidad',
-                                          value1: user!.especialidad ??'No especificado',
+                                          value1: user!.especialidad ??
+                                              'No especificado',
                                           label2: 'Tipo de Sangre',
-                                          value2: user!.tipoSangre ?? 'No especificado',
-                                         
+                                          value2: user!.tipoSangre ??
+                                              'No especificado',
                                         ),
                                         _personalInfoRow(
                                           label1: 'Contacto de Emergencia',
-                                          value1: user!.contactoEmerg ?? 'No especificado',
-                                           label2: 'Sexo',
-                                          value2: user!.sexo ?? 'No especificado',
+                                          value1: user!.contactoEmerg ??
+                                              'No especificado',
+                                          label2: 'Sexo',
+                                          value2:
+                                              user!.sexo ?? 'No especificado',
                                         ),
                                         const SizedBox(height: 8.0),
                                       ],
@@ -148,7 +149,7 @@ class PerfilScreen extends StatelessWidget {
     );
   }
 
-  Widget _personalInfoRow({
+Widget _personalInfoRow({
     required String label1,
     required String value1,
     required String label2,
@@ -157,13 +158,15 @@ class PerfilScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _personalInfo(
-            label: label1,
-            value: value1,
+          Expanded(
+            child: _personalInfo(
+              label: label1,
+              value: value1,
+            ),
           ),
-          Flexible(
+          const SizedBox(width: 24.0),
+          Expanded(
             child: _personalInfo(
               label: label2,
               value: value2,

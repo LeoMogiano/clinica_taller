@@ -14,6 +14,7 @@ class User {
     this.telefono,
     this.contactoEmerg,
     this.tipoSangre,
+    this.foto, 
   });
 
   int? id;
@@ -28,6 +29,7 @@ class User {
   String? telefono;
   String? contactoEmerg;
   String? tipoSangre;
+  String? foto; 
 
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
 
@@ -46,6 +48,7 @@ class User {
         telefono: json["telefono"],
         contactoEmerg: json["contacto_emerg"],
         tipoSangre: json["tipo_sangre"],
+        foto: json["foto"], 
       );
 
   Map<String, dynamic> toMap() => {
@@ -61,6 +64,7 @@ class User {
         "telefono": telefono,
         "contacto_emerg": contactoEmerg,
         "tipo_sangre": tipoSangre,
+        "foto": foto,
       };
 
   bool get isEmpty => id == 0 && name.isEmpty && email.isEmpty;
@@ -75,4 +79,3 @@ class User {
     }
   }
 }
-

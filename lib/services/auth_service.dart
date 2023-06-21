@@ -2,11 +2,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:clinica_app_taller/models/models.dart';
 
 class AuthService extends ChangeNotifier {
-  static const String _baseUrl = 'http://192.168.0.18/api_clinica/public';
+  final String _baseUrl = dotenv.env['BASE_URL'] ?? '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   User? user;
   bool isLoading = false;
@@ -23,7 +24,7 @@ class AuthService extends ChangeNotifier {
     bool isLoading = true;
     notifyListeners();
 
-    const url = '$_baseUrl/api/login';
+    final url = '$_baseUrl/api/login';
 
     final response = await http.post(Uri.parse(url), body: {
       'email': email,
@@ -70,7 +71,7 @@ class AuthService extends ChangeNotifier {
     if (token == null) {
       return false;
     }
-    const url = '$_baseUrl/api/user';
+    final url = '$_baseUrl/api/user';
     final response = await http.get(Uri.parse(url), headers: {
       'Authorization': 'Bearer $token',
     });

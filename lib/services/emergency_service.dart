@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:clinica_app_taller/models/models.dart';
 
 class EmergencyService extends ChangeNotifier {
-  static const String _baseUrl = 'http://192.168.0.18/api_clinica/public';
+  final String _baseUrl = dotenv.env['BASE_URL'] ?? '';
 
   List<Emergency> emergencies = [];
   User? user;
@@ -13,7 +14,7 @@ class EmergencyService extends ChangeNotifier {
   
 
   Future<List<Emergency>> getEmergencies() async {
-    const url = '$_baseUrl/api/emergencias';
+    final url = '$_baseUrl/api/emergencias';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
