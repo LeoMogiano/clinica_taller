@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0
-
+  flutter_native_splash: ^2.3.1
   flutter_secure_storage: ^8.0.0
   http: ^1.0.0
   intl: ^0.18.1
@@ -43,15 +43,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/logo2.png
 
-
-  #android_12:
-    #image: assets/logo.png
-    #color: "#ffffff"
-    #android: true
-    #ios: true
-    #web: true
-
+  android_12:
+    image: assets/splash.png
+    color: "#ffffff"
+    android: true
+    ios: true
+    web: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

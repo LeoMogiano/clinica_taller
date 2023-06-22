@@ -3,7 +3,7 @@ import 'package:clinica_app_taller/models/models.dart';
 import 'package:clinica_app_taller/screens/screens.dart';
 
 class AppRoutes {
-  static const initialRoute = '/splash';
+  static const initialRoute = '/check';
 
   static final routes = <Ruta>[
     Ruta(route: '/login', screen: const LoginScreen()),
