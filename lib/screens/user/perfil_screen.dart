@@ -28,7 +28,6 @@ class PerfilScreen extends StatelessWidget {
                 child: Container(
                   color: Colors.grey[200],
                   child: ListView(
-                    physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 8.0,

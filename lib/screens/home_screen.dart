@@ -6,16 +6,14 @@ import 'package:clinica_app_taller/services/services.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, this.name});
+  const HomeScreen({super.key, this.name}) ;
 
   final String? name;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final userService = Provider.of<UserService>(context, listen: false);
-    /* final emergencyService = Provider.of<EmergencyService>(context, listen: false); */
+    final authService = context.read<AuthService>();
+    final userService = context.read<UserService>();
     final user = authService.user;
 
     return MaterialApp(
@@ -25,37 +23,36 @@ class HomeScreen extends StatelessWidget {
           decoration: const BoxDecoration(
             color: Colors.white,
           ),
-          child: SingleChildScrollView(
-            child: SafeArea(
-              child: Column(
-                children: [
-                  NavBar(
-                    icon: Icons.exit_to_app,
-                    isHome: true,
-                    onPressed: () async {
-                      await authService.logout();
-                      if (context.mounted) {
-                        Navigator.pushReplacementNamed(context, '/login');
-                      }
-                    },
-                  ),
-                  Container(
+          child: SafeArea(
+            child: ListView(
+              children: [
+                NavBar(
+                  icon: Icons.exit_to_app,
+                  isHome: true,
+                  onPressed: () async {
+                    await authService.logout();
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(context, '/login');
+                    }
+                  },
+                ),
+                Expanded(
+                  child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                     ),
                     child: Column(
                       children: [
                         Welcome(
-                            welcomeText: 'Bienvenido(a)',
-                            name: name ?? user!.name),
+                          welcomeText: 'Bienvenido(a)',
+                          name: name ?? user!.name,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ButtonHome(
                               title: "Personal Médico",
                               imagePath: 'assets/medico.jpg',
-                              width: (size.width - 50) / 2,
-                              height: 170,
                               onTap: () {
                                 Navigator.push(
                                   context,
@@ -72,15 +69,14 @@ class HomeScreen extends StatelessWidget {
                             ButtonHome(
                               title: "Pacientes",
                               imagePath: 'assets/paciente.png',
-                              width: (size.width - 50) / 2,
-                              height: 170,
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
                                     builder: (context) => UserScreen(
-                                        title: 'LISTA DE PACIENTES',
-                                        getInfo: userService.getPacientes()),
+                                      title: 'LISTA DE PACIENTES',
+                                      getInfo: userService.getPacientes(),
+                                    ),
                                   ),
                                 );
                               },
@@ -96,47 +92,37 @@ class HomeScreen extends StatelessWidget {
                             ButtonHome(
                               title: "Emergencias",
                               imagePath: 'assets/emergencia.png',
-                              width: (size.width - 50) / 2,
-                              height: 170,
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) =>  const EmergencyScreen(),
+                                    builder: (context) => const EmergencyScreen(),
                                   ),
                                 );
                               },
                             ),
                             const SizedBox(width: 18.0),
-                            ButtonHome(
+                            const ButtonHome(
                               title: "Detección Facial",
                               imagePath: 'assets/ident.png',
-                              width: (size.width - 50) / 2,
-                              height: 170,
                             ),
                           ],
                         ),
                         const SizedBox(
                           height: 25.0,
                         ),
-                        Center(
-                          child:
-                            ButtonHome(
-                              title: "Historias Médicas",
-                              imagePath: 'assets/history.png',
-                              width: (size.width - 50) / 2,
-                              height: 170,
-                            ),
-                            
+                        const Center(
+                          child: ButtonHome(
+                            title: "Historias Médicas",
+                            imagePath: 'assets/history.png',
+                          ),
                         ),
-                        
                         const SizedBox(height: 120.0),
-                        
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

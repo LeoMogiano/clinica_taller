@@ -48,37 +48,34 @@ class UserScreen extends StatelessWidget {
                         } else {
                           final userList = snapshot.data;
                           if (userList != null && userList.isNotEmpty) {
-                            return SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  Padding(
+                            return ListView.builder(
+                              itemCount: userList.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index == 0) {
+                                  return Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 18.0,
                                     ),
                                     child: Text(
                                       title ?? 'Usuarios',
+                                      textAlign: TextAlign.center,
                                       style: const TextStyle(
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.w300,
                                         color: Colors.black,
                                       ),
                                     ),
-                                  ),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: userList.length,
-                                    itemBuilder: (context, index) {
-                                      final user = userList[index];
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0,
-                                        ),
-                                        child: ProfileCard(user: user),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
+                                  );
+                                } else {
+                                  final user = userList[index - 1];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0,
+                                    ),
+                                    child: ProfileCard(user: user),
+                                  );
+                                }
+                              },
                             );
                           } else {
                             return Container(
@@ -111,9 +108,9 @@ class UserScreen extends StatelessWidget {
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  }) ;
 
   final User user;
 

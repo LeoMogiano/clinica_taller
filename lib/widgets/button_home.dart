@@ -3,26 +3,23 @@ import 'package:flutter/material.dart';
 class ButtonHome extends StatelessWidget {
   final String title;
   final String imagePath;
-  final double width;
-  final double height;
   final VoidCallback? onTap;
 
   const ButtonHome({
-    Key? key,
+    super.key,
     required this.title,
     required this.imagePath,
-    required this.width,
-    required this.height,
     this.onTap,
-  }) : super(key: key);
+  }) ;
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: width,
-        height: height,
+        width: (size.width - 50) / 2,
+        height: 170,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
