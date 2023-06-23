@@ -10,8 +10,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
   late AuthService authService;
   String errorMessage = '';
 
@@ -23,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
@@ -122,9 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         setState(() {
                                           errorMessage = '';
                                         });
-                                        final success =
-                                            await authService.login(
-                                                email, password);
+                                        final success = await authService.login(
+                                            email, password);
                                         if (success) {
                                           if (context.mounted) {
                                             Navigator.pushReplacementNamed(
