@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:clinica_app_taller/models/models.dart';
+import 'package:clinica_app_taller/services/services.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
 class EditPScreen extends StatelessWidget {
-  const EditPScreen(
-      {super.key, this.title, required this.user, required this.paciente});
+  const EditPScreen({
+    Key? key,
+    this.title,
+    required this.user,
+    required this.paciente,
+    required this.edit,
+  }) : super(key: key);
 
   final String? title;
   final User user;
+  final bool edit;
   final bool paciente;
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context, listen: true);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -53,7 +62,9 @@ class EditPScreen extends StatelessWidget {
                         BuildForm(
                           user: user,
                           paciente: paciente,
-                        )
+                          edit: edit,
+                          userService: userService,
+                        ),
                       ],
                     ),
                   ),
@@ -69,23 +80,29 @@ class EditPScreen extends StatelessWidget {
 
 class BuildForm extends StatefulWidget {
   const BuildForm({
-    super.key,
+    Key? key,
     required this.user,
     required this.paciente,
-  });
+    required this.edit,
+    required this.userService,
+  }) : super(key: key);
 
   final User user;
+  final bool edit;
   final bool paciente;
+  final UserService userService;
 
   @override
-  State<BuildForm> createState() => _BuildFormState();
+  BuildFormState createState() => BuildFormState();
 }
 
-class _BuildFormState extends State<BuildForm> {
+class BuildFormState extends State<BuildForm> {
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
     return Form(
+      key: formKey,
       child: Column(
         children: [
           MyInput(
@@ -130,8 +147,7 @@ class _BuildFormState extends State<BuildForm> {
             selectedDate: widget.user.fechaNac,
             onChanged: (value) {
               setState(() {
-                widget.user.fechaNac =
-                    value; // Actualiza el nombre del usuario con el nuevo valor ingresado
+                widget.user.fechaNac = value;
               });
             },
             validator: (value) {
@@ -186,11 +202,8 @@ class _BuildFormState extends State<BuildForm> {
               ),
             ],
           ),
-
-          widget.paciente != false
-              ? const SizedBox(height: 10)
-              : const SizedBox(height: 0),
-          widget.paciente != false
+          widget.paciente ? const SizedBox(height: 10) : const SizedBox(height: 0),
+          widget.paciente
               ? MyInput(
                   labelText: 'Contacto de emergencia',
                   keyboardType: TextInputType.phone,
@@ -209,33 +222,34 @@ class _BuildFormState extends State<BuildForm> {
                   value: widget.user.contactoEmerg,
                 )
               : const SizedBox(height: 0),
-
-          const SizedBox(height: 10),
-          MyDropdown<String>(
-            labelText: 'Grupo',
-            items: const [
-              DropdownMenuItem<String>(
-                value: 'Pacientes',
-                child: Text('Pacientes'),
-              ),
-              DropdownMenuItem<String>(
-                value: 'Personal Médico',
-                child: Text('Personal Médico'),
-              ),
-            ],
-            value: widget.user.group,
-            onChanged: (value) {
-              setState(() {
-                widget.user.group = value;
-              });
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Este campo es requerido';
-              }
-              return null; // Sin errores de validación
-            },
-          ),
+          widget.edit ? const SizedBox(height: 0) : const SizedBox(height: 10),
+          widget.edit
+              ? const SizedBox(height: 0)
+              : MyDropdown<String>(
+                  labelText: 'Grupo',
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: 'Pacientes',
+                      child: Text('Pacientes'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'Personal Médico',
+                      child: Text('Personal Médico'),
+                    ),
+                  ],
+                  value: widget.user.group,
+                  onChanged: (value) {
+                    setState(() {
+                      widget.user.group = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es requerido';
+                    }
+                    return null; // Sin errores de validación
+                  },
+                ),
           const SizedBox(height: 10),
           if (widget.user.group == 'Pacientes')
             MyDropdown<String>(
@@ -352,15 +366,18 @@ class _BuildFormState extends State<BuildForm> {
           ),
           const SizedBox(height: 15),
           ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                // El formulario es válido, puedes realizar la acción deseada aquí
-                // Por ejemplo, guardar los datos en la base de datos o enviarlos a través de una API
+            onPressed: () async {
+              if (formKey.currentState!.validate() &&
+                  !widget.userService.isLoading) {
+                await widget.userService.updateUsuario(
+                    widget.user, widget.user.id.toString(), widget.user.group!);
+              }
+              if (context.mounted) {
+                Navigator.pop(context);
               }
             },
-            child: const Text('Guardar'),
+            child: const Text('Guardar cambios'),
           ),
-          // Agrega más campos de acuerdo al modelo User
         ],
       ),
     );

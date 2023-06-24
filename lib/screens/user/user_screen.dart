@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:clinica_app_taller/models/models.dart';
 import 'package:clinica_app_taller/screens/screens.dart';
+import 'package:clinica_app_taller/services/services.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
 class UserScreen extends StatelessWidget {
-  const UserScreen({super.key, this.title, required this.getInfo});
+  const UserScreen({
+    Key? key, 
+    this.title,
+    required this.paciente,
+    
+  }) : super(key: key);
 
   final String? title;
-  final Future<List<User>> getInfo;
+  final bool paciente;
+  
 
   @override
   Widget build(BuildContext context) {
+
+    final userService = Provider.of<UserService>(context);
+    print('Hola');
+    
+    if( userService.isLoading ) {
+      return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    }
+    
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -27,29 +47,19 @@ class UserScreen extends StatelessWidget {
                 NavBar(
                   isHome: false,
                   icon: Icons.arrow_back,
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () async {
+                    
+                    Navigator.pop(context);
+                  },
                 ),
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                     ),
-                    child: FutureBuilder<List<User>>(
-                      future: getInfo,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (snapshot.hasError) {
-                          return const Center(
-                            child: Text('Error al cargar los usuarios'),
-                          );
-                        } else {
-                          final userList = snapshot.data;
-                          if (userList != null && userList.isNotEmpty) {
-                            return ListView.builder(
-                              itemCount: userList.length + 1,
+                    child: paciente 
+                    ? ListView.builder(
+                              itemCount: userService.pacientes.length + 1,
                               itemBuilder: (context, index) {
                                 if (index == 0) {
                                   return Padding(
@@ -67,7 +77,7 @@ class UserScreen extends StatelessWidget {
                                     ),
                                   );
                                 } else {
-                                  final user = userList[index - 1];
+                                  final user = userService.pacientes[index - 1];
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0,
@@ -76,29 +86,40 @@ class UserScreen extends StatelessWidget {
                                   );
                                 }
                               },
-                            );
-                          } else {
-                            return Container(
-                              color: Colors.grey[200],
-                              child: const Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'No se encontraron usuarios',
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      },
-                    ),
+                            )
+                    : ListView.builder(
+                              itemCount: userService.personalMed.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index == 0) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 18.0,
+                                    ),
+                                    child: Text(
+                                      title ?? 'Usuarios',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  final user = userService.personalMed[index - 1];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0,
+                                    ),
+                                    child: ProfileCard(user: user),
+                                  );
+                                }
+                              },
+                            ),
+                          
+                    
                   ),
                 ),
-                
-
               ],
             ),
           ),
@@ -110,9 +131,9 @@ class UserScreen extends StatelessWidget {
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
-    super.key,
+    Key? key, // Cambia "super.key" por "Key? key"
     required this.user,
-  }) ;
+  }) : super(key: key);
 
   final User user;
 
@@ -178,8 +199,12 @@ class ProfileCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => EditPScreen(title: 'ACTUALIZACIÓN DE DATOS', user: user, paciente: false,)
-                  ),
+                      builder: (context) => EditPScreen(
+                            title: 'ACTUALIZACIÓN DE DATOS',
+                            user: user,
+                            paciente: false,
+                            edit: true,
+                          )),
                 );
               },
             ),

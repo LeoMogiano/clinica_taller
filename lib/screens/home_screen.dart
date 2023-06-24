@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = context.read<AuthService>();
-    final userService = context.read<UserService>();
+    
     final user = authService.user;
 
     return MaterialApp(
@@ -57,9 +57,10 @@ class HomeScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => UserScreen(
-                                      title: 'LISTA DE PERSONAL MÉDICO',
-                                      getInfo: userService.getPersonalMed(),
+                                    builder: (context) => const UserScreen(
+                                      title: 'LISTA DE PERSONAL MÉDICO', paciente: false,
+                                      
+                                     
                                     ),
                                   ),
                                 );
@@ -73,9 +74,9 @@ class HomeScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => UserScreen(
-                                      title: 'LISTA DE PACIENTES',
-                                      getInfo: userService.getPacientes(),
+                                    builder: (context) => const UserScreen(
+                                      title: 'LISTA DE PACIENTES', paciente: true,
+                                      
                                     ),
                                   ),
                                 );
