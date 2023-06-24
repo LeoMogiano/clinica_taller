@@ -97,6 +97,8 @@ class UserScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                
+
               ],
             ),
           ),
@@ -173,7 +175,12 @@ class ProfileCard extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                // Acción para editar el elemento
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => EditPScreen(title: 'ACTUALIZACIÓN DE DATOS', user: user, paciente: false,)
+                  ),
+                );
               },
             ),
             IconButton(
