@@ -48,7 +48,7 @@ class CreatePScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20.0),
-                        BuildForm()
+                        const BuildFormCreate()
                       ],
                     ),
                   ),
@@ -62,18 +62,18 @@ class CreatePScreen extends StatelessWidget {
   }
 }
 
-class BuildForm extends StatefulWidget {
-  const BuildForm({
+class BuildFormCreate extends StatefulWidget {
+  const BuildFormCreate({
     super.key,
 
   });
 
 
   @override
-  State<BuildForm> createState() => _BuildFormState();
+  State<BuildFormCreate> createState() => _BuildFormCreateState();
 }
 
-class _BuildFormState extends State<BuildForm> {
+class _BuildFormCreateState extends State<BuildFormCreate> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
