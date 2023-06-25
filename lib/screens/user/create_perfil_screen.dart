@@ -1,12 +1,15 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:clinica_app_taller/models/models.dart';
+import 'package:clinica_app_taller/services/services.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
+
 class CreatePScreen extends StatelessWidget {
-  const CreatePScreen({super.key, this.title});
+  const CreatePScreen({super.key, this.title, required this.paciente});
 
   final String? title;
-  
+  final bool paciente;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,9 @@ class CreatePScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20.0),
-                        const BuildFormCreate()
+                        BuildFormCreate(
+                          paciente: paciente,
+                        )
                       ],
                     ),
                   ),
@@ -63,25 +68,36 @@ class CreatePScreen extends StatelessWidget {
 }
 
 class BuildFormCreate extends StatefulWidget {
-  const BuildFormCreate({
-    super.key,
+  const BuildFormCreate({Key? key, required this.paciente}) : super(key: key);
 
-  });
-
+  final bool paciente;
 
   @override
   State<BuildFormCreate> createState() => _BuildFormCreateState();
 }
 
 class _BuildFormCreateState extends State<BuildFormCreate> {
+  final formKey = GlobalKey<FormState>();
+  User user = User(name: '', email: '', password: '');
+
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    User user = User(name:'', email: '');
+
+    final userService = Provider.of<UserService>(context, listen: true);
+    List<String> bloodTypes = [
+      'O+',
+      'O-',
+      'A+',
+      'A-',
+      'B+',
+      'B-',
+      'AB+',
+      'AB-'
+    ];
     return Form(
+      key: formKey,
       child: Column(
         children: [
-          
           MyInput(
             labelText: 'Nombre',
             keyboardType: TextInputType.text,
@@ -119,12 +135,32 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
             value: user.email,
           ),
           const SizedBox(height: 10),
+          MyInput(
+            labelText: 'Contraseña',
+            keyboardType: TextInputType.text,
+            obscureText: true,
+            onChanged: (value) {
+              setState(() {
+                user.password = value;
+              });
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Este campo es requerido';
+              }
+              return null; 
+            },
+            value: user.password,
+          ),
+          
+          const SizedBox(height: 10),
           MyDateField(
             labelText: 'Fecha de nacimiento',
             selectedDate: user.fechaNac,
             onChanged: (value) {
               setState(() {
-                user.fechaNac = value; // Actualiza el nombre del usuario con el nuevo valor ingresado
+                user.fechaNac =
+                    value; // Actualiza el nombre del usuario con el nuevo valor ingresado
               });
             },
             validator: (value) {
@@ -179,19 +215,19 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
               ),
             ],
           ),
-
           const SizedBox(height: 10),
           MyDropdown<String>(
             labelText: 'Grupo',
-            items: const [
-              DropdownMenuItem<String>(
-                value: 'Pacientes',
-                child: Text('Pacientes'),
-              ),
-              DropdownMenuItem<String>(
-                value: 'Personal Médico',
-                child: Text('Personal Médico'),
-              ),
+            items: [
+              widget.paciente
+                  ? const DropdownMenuItem<String>(
+                      value: 'Pacientes',
+                      child: Text('Pacientes'),
+                    )
+                  : const DropdownMenuItem<String>(
+                      value: 'Personal Médico',
+                      child: Text('Personal Médico'),
+                    ),
             ],
             value: user.group,
             onChanged: (value) {
@@ -260,77 +296,83 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
               },
             ),
           const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: MyDropdown<String>(
-                  labelText: 'Sexo',
-                  items: const [
-                    DropdownMenuItem<String>(
-                      value: 'Masculino',
-                      child: Text('Masculino'),
-                    ),
-                    DropdownMenuItem<String>(
-                      value: 'Femenino',
-                      child: Text('Femenino'),
-                    ),
-                    DropdownMenuItem<String>(
-                      value: 'Otro',
-                      child: Text('Otro'),
-                    ),
-                  ],
-                  value: user.sexo,
-                  onChanged: (value) {
-                    setState(() {
-                      user.sexo = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Este campo es requerido';
-                    }
-                    return null; // Sin errores de validación
-                  },
-                ),
-              ),
-              const SizedBox(width: 2.5),
-              Expanded(
-                child: MyDropdown<String>(
-                  labelText: 'Tipo Sangre',
-                  items: const [
-                    DropdownMenuItem<String>(
-                      value: 'O+',
-                      child: Text('ORH +'),
-                    ),
-                    // Agrega aquí todos los tipos de sangre necesarios
-                  ],
-                  value: user.tipoSangre,
-                  onChanged: (value) {
-                    setState(() {
-                      user.tipoSangre = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Este campo es requerido';
-                    }
-                    return null; // Sin errores de validación
-                  },
-                ),
-              ),
-            ],
+          MyDropdown<String>(
+            labelText: 'Tipo Sangre',
+            items: List<DropdownMenuItem<String>>.generate(
+              bloodTypes.length,
+              (index) {
+                String type = bloodTypes[index];
+                return DropdownMenuItem<String>(
+                  value: type,
+                  child: Text(type),
+                );
+              },
+            ),
+            value: user.tipoSangre,
+            onChanged: (value) {
+              setState(() {
+                user.tipoSangre = value;
+              });
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Este campo es requerido';
+              }
+              return null; // Sin errores de validación
+            },
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
+          widget.paciente
+              ? const SizedBox(height: 0)
+              : MyInput(
+                  labelText: 'Especialidad',
+                  keyboardType: TextInputType.text,
+                  onChanged: (value) {
+                    setState(() {
+                      user.especialidad = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es requerido';
+                    }
+                    // Aquí puedes agregar una validación de formato de teléfono si lo deseas
+                    return null; // Sin errores de validación
+                  },
+                  value: user.especialidad,
+                ),
+          widget.paciente
+              ? MyInput(
+                  labelText: 'Contacto de emergencia',
+                  keyboardType: TextInputType.phone,
+                  onChanged: (value) {
+                    setState(() {
+                      user.contactoEmerg = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es requerido';
+                    }
+                    // Aquí puedes agregar una validación de formato de teléfono si lo deseas
+                    return null; // Sin errores de validación
+                  },
+                  value: user.contactoEmerg,
+                )
+              : const SizedBox(height: 0),
+          const SizedBox(height: 10),
           ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                // El formulario es válido, puedes realizar la acción deseada aquí
-                // Por ejemplo, guardar los datos en la base de datos o enviarlos a través de una API
+            onPressed: () async {
+              if (formKey.currentState!.validate() &&
+                  !userService.isLoading) {
+                await userService.createUsuario(user, user.group!);
+              }
+              if (context.mounted) {
+                Navigator.pop(context);
               }
             },
-            child: const Text('Guardar'),
+            child: const Text('Guardar cambios'),
           ),
-          // Agrega más campos de acuerdo al modelo User
         ],
       ),
     );

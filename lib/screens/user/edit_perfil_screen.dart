@@ -20,7 +20,6 @@ class EditPScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<UserService>(context, listen: true);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -63,7 +62,6 @@ class EditPScreen extends StatelessWidget {
                           user: user,
                           paciente: paciente,
                           edit: edit,
-                          userService: userService,
                         ),
                       ],
                     ),
@@ -84,13 +82,11 @@ class BuildForm extends StatefulWidget {
     required this.user,
     required this.paciente,
     required this.edit,
-    required this.userService,
   }) : super(key: key);
 
   final User user;
   final bool edit;
   final bool paciente;
-  final UserService userService;
 
   @override
   BuildFormState createState() => BuildFormState();
@@ -101,6 +97,7 @@ class BuildFormState extends State<BuildForm> {
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context, listen: true);
     return Form(
       key: formKey,
       child: Column(
@@ -202,7 +199,9 @@ class BuildFormState extends State<BuildForm> {
               ),
             ],
           ),
-          widget.paciente ? const SizedBox(height: 10) : const SizedBox(height: 0),
+          widget.paciente
+              ? const SizedBox(height: 10)
+              : const SizedBox(height: 0),
           widget.paciente
               ? MyInput(
                   labelText: 'Contacto de emergencia',
@@ -303,6 +302,28 @@ class BuildFormState extends State<BuildForm> {
                 return null; // Sin errores de validación
               },
             ),
+          widget.paciente
+              ? const SizedBox(height: 0)
+              : const SizedBox(height: 10),
+          widget.paciente
+              ? MyInput(
+                  labelText: 'Especialidad',
+                  keyboardType: TextInputType.text,
+                  onChanged: (value) {
+                    setState(() {
+                      widget.user.especialidad = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es requerido';
+                    }
+                    // Aquí puedes agregar una validación de formato de teléfono si lo deseas
+                    return null; // Sin errores de validación
+                  },
+                  value: widget.user.especialidad,
+                )
+              : const SizedBox(height: 0),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -367,9 +388,8 @@ class BuildFormState extends State<BuildForm> {
           const SizedBox(height: 15),
           ElevatedButton(
             onPressed: () async {
-              if (formKey.currentState!.validate() &&
-                  !widget.userService.isLoading) {
-                await widget.userService.updateUsuario(
+              if (formKey.currentState!.validate() && !userService.isLoading) {
+                await userService.updateUsuario(
                     widget.user, widget.user.id.toString(), widget.user.group!);
               }
               if (context.mounted) {

@@ -57,6 +57,48 @@ class UserService extends ChangeNotifier {
     }
   }
 
+  Future<void> createUsuario(User user, String group) async {
+  final url = '$_baseUrl/api/create_user';
+  final headers = <String, String>{'Content-Type': 'application/json'};
+
+  isLoading = true;
+  notifyListeners();
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: user.toJson(),
+    );
+
+    if (response.statusCode == 201) {
+      // El usuario se creó correctamente
+      final newUser = user;
+
+      if (group == 'Personal Médico') {
+        personalMed.add(newUser);
+      } else if (group == 'Pacientes') {
+        pacientes.add(newUser);
+      }
+
+      print('Usuario creado exitosamente');
+    } else if (response.statusCode == 400) {
+      // Ocurrió un error de validación
+      print('Error de validación: ${response.body}');
+    } else {
+      // Ocurrió un error desconocido
+      print('Error al crear el usuario');
+    }
+  } catch (e) {
+    // Manejar cualquier excepción que pueda ocurrir
+    print('Error al realizar la solicitud: $e');
+  }
+
+  isLoading = false;
+  notifyListeners();
+}
+
+
   Future<void> updateUsuario(User user, String id, String group) async {
     final url = '$_baseUrl/api/update_user/$id';
     final headers = <String, String>{'Content-Type': 'application/json'};
@@ -73,12 +115,12 @@ class UserService extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         // El usuario se actualizó correctamente
-        if (group == 'personal_med') {
+        if (group == 'Personal Médico') {
           final index = personalMed.indexWhere((u) => u.id == id);
           if (index != -1) {
             personalMed[index] = user;
           }
-        } else if (group == 'pacientes') {
+        } else if (group == 'Pacientes') {
           final index = pacientes.indexWhere((u) => u.id == id);
           if (index != -1) {
             pacientes[index] = user;

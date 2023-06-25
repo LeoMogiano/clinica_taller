@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 
 class MyInput extends StatelessWidget {
 
-  final dynamic value;
-  final String labelText;
-  final TextInputType keyboardType;
-  final ValueChanged<String> onChanged;
-  final int? maxLength;
-  final FormFieldValidator<String>? validator;
-
   const MyInput({
     super.key, 
     required this.value,
@@ -16,8 +9,17 @@ class MyInput extends StatelessWidget {
     required this.keyboardType,
     required this.onChanged,
     this.maxLength,
-    this.validator,
+    this.validator, 
+    this.obscureText,
   }) ;
+
+  final dynamic value;
+  final String labelText;
+  final TextInputType keyboardType;
+  final ValueChanged<String> onChanged;
+  final int? maxLength;
+  final FormFieldValidator<String>? validator;
+  final bool? obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class MyInput extends StatelessWidget {
       child: TextFormField(
         enableSuggestions: false,
         autocorrect: false,
+        obscureText: obscureText ?? false,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         keyboardType: keyboardType,
         onChanged: onChanged,

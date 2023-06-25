@@ -126,8 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             email, password);
                                         if (success) {
                                           if (context.mounted) {
-                                            Navigator.pushReplacementNamed(
-                                                context, '/home');
+                                            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                                           }
                                         } else {
                                           setState(() {

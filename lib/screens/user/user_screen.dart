@@ -8,31 +8,48 @@ import 'package:clinica_app_taller/widgets/widgets.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({
-    Key? key, 
+    Key? key,
     this.title,
     required this.paciente,
-    
   }) : super(key: key);
 
   final String? title;
   final bool paciente;
-  
 
   @override
   Widget build(BuildContext context) {
-
     final userService = Provider.of<UserService>(context);
     print('Hola');
-    
-    if( userService.isLoading ) {
+
+    if (userService.isLoading) {
       return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+        floatingActionButton: FloatingActionButton(
+          onPressed: null,
+          child: Icon(Icons.add),
+        ),
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
-    
+
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[700] ,
+        onPressed: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => CreatePScreen(
+                title: 'REGISTRO DE USUARIO',
+                paciente: paciente,
+                
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -48,7 +65,6 @@ class UserScreen extends StatelessWidget {
                   isHome: false,
                   icon: Icons.arrow_back,
                   onPressed: () async {
-                    
                     Navigator.pop(context);
                   },
                 ),
@@ -57,67 +73,65 @@ class UserScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                     ),
-                    child: paciente 
-                    ? ListView.builder(
-                              itemCount: userService.pacientes.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 18.0,
+                    child: paciente
+                        ? ListView.builder(
+                            itemCount: userService.pacientes.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 18.0,
+                                  ),
+                                  child: Text(
+                                    title ?? 'Usuarios',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black,
                                     ),
-                                    child: Text(
-                                      title ?? 'Usuarios',
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.black,
-                                      ),
+                                  ),
+                                );
+                              } else {
+                                final user = userService.pacientes[index - 1];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0,
+                                  ),
+                                  child: ProfileCard(user: user),
+                                );
+                              }
+                            },
+                          )
+                        : ListView.builder(
+                            itemCount: userService.personalMed.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 18.0,
+                                  ),
+                                  child: Text(
+                                    title ?? 'Usuarios',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black,
                                     ),
-                                  );
-                                } else {
-                                  final user = userService.pacientes[index - 1];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0,
-                                    ),
-                                    child: ProfileCard(user: user),
-                                  );
-                                }
-                              },
-                            )
-                    : ListView.builder(
-                              itemCount: userService.personalMed.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 18.0,
-                                    ),
-                                    child: Text(
-                                      title ?? 'Usuarios',
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  final user = userService.personalMed[index - 1];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0,
-                                    ),
-                                    child: ProfileCard(user: user),
-                                  );
-                                }
-                              },
-                            ),
-                          
-                    
+                                  ),
+                                );
+                              } else {
+                                final user = userService.personalMed[index - 1];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0,
+                                  ),
+                                  child: ProfileCard(user: user),
+                                );
+                              }
+                            },
+                          ),
                   ),
                 ),
               ],

@@ -6,48 +6,45 @@ import 'package:clinica_app_taller/services/services.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, this.name}) ;
+  const HomeScreen({super.key, this.name});
 
   final String? name;
 
   @override
   Widget build(BuildContext context) {
     final authService = context.read<AuthService>();
-    
     final user = authService.user;
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          child: SafeArea(
-            child: ListView(
-              children: [
-                NavBar(
-                  icon: Icons.exit_to_app,
-                  isHome: true,
-                  onPressed: () async {
-                    await authService.logout();
-                    if (context.mounted) {
-                      Navigator.pushReplacementNamed(context, '/login');
-                    }
-                  },
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            NavBar(
+              icon: Icons.exit_to_app,
+              isHome: true,
+              onPressed: () async {
+                await authService.logout();
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/login', (route) => false);
+                }
+              },
+            ),
+            Flexible(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
                 ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                    ),
-                    child: Column(
-                      children: [
-                        Welcome(
-                          welcomeText: 'Bienvenido(a)',
-                          name: name ?? user!.name,
-                        ),
-                        Row(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Welcome(
+                        welcomeText: 'Bienvenido(a)',
+                        name: name ?? user!.name,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ButtonHome(
@@ -58,9 +55,8 @@ class HomeScreen extends StatelessWidget {
                                   context,
                                   CupertinoPageRoute(
                                     builder: (context) => const UserScreen(
-                                      title: 'LISTA DE PERSONAL MÉDICO', paciente: false,
-                                      
-                                     
+                                      title: 'LISTA DE PERSONAL MÉDICO',
+                                      paciente: false,
                                     ),
                                   ),
                                 );
@@ -75,8 +71,8 @@ class HomeScreen extends StatelessWidget {
                                   context,
                                   CupertinoPageRoute(
                                     builder: (context) => const UserScreen(
-                                      title: 'LISTA DE PACIENTES', paciente: true,
-                                      
+                                      title: 'LISTA DE PACIENTES',
+                                      paciente: true,
                                     ),
                                   ),
                                 );
@@ -84,10 +80,10 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
-                        Row(
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ButtonHome(
@@ -109,23 +105,23 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
-                        const Center(
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Center(
                           child: ButtonHome(
                             title: "Historias Médicas",
                             imagePath: 'assets/history.png',
                           ),
                         ),
-                        const SizedBox(height: 120.0),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 120.0),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

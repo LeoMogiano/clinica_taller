@@ -107,6 +107,7 @@ class AuthService extends ChangeNotifier {
       id: int.tryParse(id ?? ''),
       name: name ?? '',
       email: email ?? '',
+      password: '',
     );
   }
 

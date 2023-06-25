@@ -5,6 +5,7 @@ class User {
     this.id,
     required this.name,
     required this.email,
+    required this.password,
     this.role,
     this.group,
     this.especialidad,
@@ -20,6 +21,7 @@ class User {
   int? id;
   String name;
   String email;
+  String? password;
   String? role;
   String? group;
   String? especialidad;
@@ -39,6 +41,7 @@ class User {
         id: json["id"],
         name: json["name"],
         email: json["email"],
+        password: json["password"],
         role: json["role"],
         group: json["group"],
         especialidad: json["especialidad"],
@@ -55,6 +58,7 @@ class User {
         "id": id,
         "name": name,
         "email": email,
+        "password": password,
         "role": role,
         "group": group,
         "especialidad": especialidad,
