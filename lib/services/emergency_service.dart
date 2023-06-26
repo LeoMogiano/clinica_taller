@@ -8,10 +8,11 @@ class EmergencyService extends ChangeNotifier {
   final String _baseUrl = dotenv.env['BASE_URL'] ?? '';
 
   List<Emergency> emergencies = [];
-  User? user;
   bool isLoading = false;
 
-  
+  EmergencyService() {
+    getEmergencies();
+  }
 
   Future<List<Emergency>> getEmergencies() async {
     final url = '$_baseUrl/api/emergencias';

@@ -10,7 +10,7 @@ class AppRoutes {
     Ruta(route: '/home', screen:  const HomeScreen()),
     Ruta(route: '/splash', screen: const SplashScreen()),
     Ruta(route: '/check', screen: const CheckAuthScreen()),
-    Ruta(route: '/perfil', screen: const PerfilScreen()),
+    /* Ruta(route: '/perfil', screen: const PerfilScreen()), */
     /* Ruta(route: '/user', screen: const UserScreen()), */
   ];
 

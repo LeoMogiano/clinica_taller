@@ -19,7 +19,7 @@ class UserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
-    print('Hola');
+    
 
     if (userService.isLoading) {
       return const Scaffold(
