@@ -78,22 +78,22 @@ class BuildFormCreate extends StatefulWidget {
 
 class _BuildFormCreateState extends State<BuildFormCreate> {
   final formKey = GlobalKey<FormState>();
+  final List<String> bloodTypes = [
+    'O+',
+    'O-',
+    'A+',
+    'A-',
+    'B+',
+    'B-',
+    'AB+',
+    'AB-'
+  ];
   User user = User(name: '', email: '');
-  String password='';
+  String password = '';
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: true);
-    List<String> bloodTypes = [
-      'O+',
-      'O-',
-      'A+',
-      'A-',
-      'B+',
-      'B-',
-      'AB+',
-      'AB-'
-    ];
-    
+
     return Form(
       key: formKey,
       child: Column(
@@ -296,30 +296,68 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
               },
             ),
           const SizedBox(height: 10),
-          MyDropdown<String>(
-            labelText: 'Tipo Sangre',
-            items: List<DropdownMenuItem<String>>.generate(
-              bloodTypes.length,
-              (index) {
-                String type = bloodTypes[index];
-                return DropdownMenuItem<String>(
-                  value: type,
-                  child: Text(type),
-                );
-              },
-            ),
-            value: user.tipoSangre,
-            onChanged: (value) {
-              setState(() {
-                user.tipoSangre = value;
-              });
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Este campo es requerido';
-              }
-              return null; // Sin errores de validación
-            },
+          Row(
+            children: [
+              Expanded(
+                child: MyDropdown<String>(
+                  labelText: 'Sexo',
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: 'Masculino',
+                      child: Text('Masculino'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'Femenino',
+                      child: Text('Femenino'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'Otro',
+                      child: Text('Otro'),
+                    ),
+                  ],
+                  value: user.sexo,
+                  onChanged: (value) {
+                    setState(() {
+                      user.sexo = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es requerido';
+                    }
+                    return null; // Sin errores de validación
+                  },
+                ),
+              ),
+              const SizedBox(width: 2.5),
+              Expanded(
+                child: MyDropdown<String>(
+                  labelText: 'Tipo Sangre',
+                  items: List<DropdownMenuItem<String>>.generate(
+                    bloodTypes.length,
+                    (index) {
+                      String type = bloodTypes[index];
+                      return DropdownMenuItem<String>(
+                        value: type,
+                        child: Text(type),
+                      );
+                    },
+                  ),
+                  value: user.tipoSangre,
+                  onChanged: (value) {
+                    setState(() {
+                      user.tipoSangre = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es requerido';
+                    }
+                    return null; // Sin errores de validación
+                  },
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 10),
           widget.paciente
@@ -363,7 +401,6 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () async {
-              
               if (formKey.currentState!.validate() && !userService.isLoading) {
                 await userService.createUsuario(user, password, user.group!);
               }

@@ -94,7 +94,7 @@ class BuildForm extends StatefulWidget {
 
 class BuildFormState extends State<BuildForm> {
   final formKey = GlobalKey<FormState>();
-
+  final List<String> bloodTypes = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: true);
@@ -362,13 +362,16 @@ class BuildFormState extends State<BuildForm> {
               Expanded(
                 child: MyDropdown<String>(
                   labelText: 'Tipo Sangre',
-                  items: const [
-                    DropdownMenuItem<String>(
-                      value: 'O+',
-                      child: Text('ORH +'),
-                    ),
-                    // Agrega aquí todos los tipos de sangre necesarios
-                  ],
+                  items: List<DropdownMenuItem<String>>.generate(
+                    bloodTypes.length,
+                    (index) {
+                      String type = bloodTypes[index];
+                      return DropdownMenuItem<String>(
+                        value: type,
+                        child: Text(type),
+                      );
+                    },
+                  ),
                   value: widget.user.tipoSangre,
                   onChanged: (value) {
                     setState(() {
