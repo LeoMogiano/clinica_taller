@@ -4,11 +4,9 @@ import 'package:clinica_app_taller/models/models.dart';
 import 'package:clinica_app_taller/services/services.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
-
 class CreatePScreen extends StatelessWidget {
-  const CreatePScreen({super.key, this.title, required this.paciente});
+  const CreatePScreen({super.key, required this.paciente});
 
-  final String? title;
   final bool paciente;
 
   @override
@@ -42,7 +40,9 @@ class CreatePScreen extends StatelessWidget {
                       ),
                       children: [
                         Text(
-                          title ?? 'Usuarios',
+                          paciente
+                              ? 'Registro de Paciente'
+                              : 'Registro de Personal Médico',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 18.0,
@@ -78,11 +78,10 @@ class BuildFormCreate extends StatefulWidget {
 
 class _BuildFormCreateState extends State<BuildFormCreate> {
   final formKey = GlobalKey<FormState>();
-  User user = User(name: '', email: '', password: '');
-
+  User user = User(name: '', email: '');
+  String password='';
   @override
   Widget build(BuildContext context) {
-
     final userService = Provider.of<UserService>(context, listen: true);
     List<String> bloodTypes = [
       'O+',
@@ -94,6 +93,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
       'AB+',
       'AB-'
     ];
+    
     return Form(
       key: formKey,
       child: Column(
@@ -141,18 +141,18 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
             obscureText: true,
             onChanged: (value) {
               setState(() {
-                user.password = value;
+                password = value;
               });
+              print(password);
             },
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Este campo es requerido';
               }
-              return null; 
+              return null;
             },
-            value: user.password,
+            value: password,
           ),
-          
           const SizedBox(height: 10),
           MyDateField(
             labelText: 'Fecha de nacimiento',
@@ -363,9 +363,9 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () async {
-              if (formKey.currentState!.validate() &&
-                  !userService.isLoading) {
-                await userService.createUsuario(user, user.group!);
+              
+              if (formKey.currentState!.validate() && !userService.isLoading) {
+                await userService.createUsuario(user, password, user.group!);
               }
               if (context.mounted) {
                 Navigator.pop(context);

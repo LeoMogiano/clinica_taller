@@ -41,7 +41,7 @@ class UserScreen extends StatelessWidget {
             context,
             CupertinoPageRoute(
               builder: (context) => CreatePScreen(
-                title: 'REGISTRO DE USUARIO',
+               
                 paciente: paciente,
                 
               ),

@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:clinica_app_taller/models/models.dart';
 
@@ -57,47 +59,52 @@ class UserService extends ChangeNotifier {
     }
   }
 
-  Future<void> createUsuario(User user, String group) async {
-  final url = '$_baseUrl/api/create_user';
-  final headers = <String, String>{'Content-Type': 'application/json'};
+  Future<void> createUsuario(User user, String password, String group) async {
+    final url = '$_baseUrl/api/create_user';
+    final headers = <String, String>{'Content-Type': 'application/json'};
 
-  isLoading = true;
-  notifyListeners();
+    isLoading = true;
+    notifyListeners();
 
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: headers,
-      body: user.toJson(),
-    );
+    try {
+      // Crear un mapa JSON con los datos del usuario
+      final userData = user.toMap();
 
-    if (response.statusCode == 201) {
-      // El usuario se creó correctamente
-      final newUser = user;
+      // Agregar el campo 'password' al mapa JSON si se proporciona
+      userData['password'] = password;
 
-      if (group == 'Personal Médico') {
-        personalMed.add(newUser);
-      } else if (group == 'Pacientes') {
-        pacientes.add(newUser);
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(userData),
+      );
+
+      if (response.statusCode == 201) {
+        // El usuario se creó correctamente
+        final newUser = user;
+
+        if (group == 'Personal Médico') {
+          personalMed.add(newUser);
+        } else if (group == 'Pacientes') {
+          pacientes.add(newUser);
+        }
+
+        print('Usuario creado exitosamente');
+      } else if (response.statusCode == 400) {
+        // Ocurrió un error de validación
+        print('Error de validación: ${response.body}');
+      } else {
+        // Ocurrió un error desconocido
+        print('Error al crear el usuario');
       }
-
-      print('Usuario creado exitosamente');
-    } else if (response.statusCode == 400) {
-      // Ocurrió un error de validación
-      print('Error de validación: ${response.body}');
-    } else {
-      // Ocurrió un error desconocido
-      print('Error al crear el usuario');
+    } catch (e) {
+      // Manejar cualquier excepción que pueda ocurrir
+      print('Error al realizar la solicitud: $e');
     }
-  } catch (e) {
-    // Manejar cualquier excepción que pueda ocurrir
-    print('Error al realizar la solicitud: $e');
+
+    isLoading = false;
+    notifyListeners();
   }
-
-  isLoading = false;
-  notifyListeners();
-}
-
 
   Future<void> updateUsuario(User user, String id, String group) async {
     final url = '$_baseUrl/api/update_user/$id';
