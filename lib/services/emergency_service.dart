@@ -10,6 +10,9 @@ class EmergencyService extends ChangeNotifier {
   List<Emergency> emergencies = [];
   bool isLoading = false;
 
+  User? paciente;
+  User? medico;
+
   EmergencyService() {
     getEmergencies();
   }
@@ -22,8 +25,10 @@ class EmergencyService extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      final List<Emergency> parsedEmergencies = Emergency.parseEmergencies(response.body);
+      final List<Emergency> parsedEmergencies =
+          Emergency.parseEmergencies(response.body);
       emergencies = parsedEmergencies;
+
       isLoading = false;
       notifyListeners();
 
@@ -46,6 +51,26 @@ class EmergencyService extends ChangeNotifier {
       return emergency;
     } else {
       throw Exception('Error al cargar los datos de la emergencia');
+    }
+  }
+
+  Future<User> getUsuarioById(String id) async {
+    final url = '$_baseUrl/api/user/$id';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      isLoading = true;
+      notifyListeners();
+      final Map<String, dynamic> userData = json.decode(response.body);
+      final User user = User.fromMap(userData['user']);
+      paciente = user;
+      isLoading = false;
+      notifyListeners();
+      return user;
+    } else if (response.statusCode == 404) {
+      throw Exception('Usuario no encontrado');
+    } else {
+      throw Exception('Error al obtener el usuario');
     }
   }
 

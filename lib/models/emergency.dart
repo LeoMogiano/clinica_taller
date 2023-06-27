@@ -12,7 +12,8 @@ class Emergency {
     this.detalleFin,
     this.diagnostico,
     required this.userId,
-    this.nameUser, // Nuevo campo agregado
+    this.nameUser,
+    required this.medicoId,
   });
 
   int? id;
@@ -25,7 +26,8 @@ class Emergency {
   String? detalleFin;
   String? diagnostico;
   int userId;
-  String? nameUser; // Nuevo campo agregado
+  String? nameUser;
+  int medicoId;
 
   factory Emergency.fromJson(String str) =>
       Emergency.fromMap(json.decode(str));
@@ -43,7 +45,8 @@ class Emergency {
         detalleFin: json["detalle_fin"],
         diagnostico: json["diagnostico"],
         userId: json["user_id"],
-        nameUser: json["name_user"], // Nuevo campo agregado
+        nameUser: json["name_user"], 
+        medicoId: json["medico_id"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -57,7 +60,9 @@ class Emergency {
         "detalle_fin": detalleFin,
         "diagnostico": diagnostico,
         "user_id": userId,
-        "name_user": nameUser, // Nuevo campo agregado
+        "name_user": nameUser,
+        "medico_id": medicoId,
+
       };
 
   bool get isEmpty =>
@@ -67,6 +72,7 @@ class Emergency {
       observacion == null &&
       detalleFin == null &&
       diagnostico == null;
+
       
   static List<Emergency> parseEmergencies(String jsonString) {
     final Map<String, dynamic> parsedJson = json.decode(jsonString);

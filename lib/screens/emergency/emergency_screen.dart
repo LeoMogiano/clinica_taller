@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -69,7 +68,9 @@ class EmergencyScreen extends StatelessWidget {
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10),
-                                  child: EmergencyCard(emergency: emergency),
+                                  child: EmergencyCard(
+                                      emergency: emergency,
+                                      emergencyService: emergencyService),
                                 );
                               },
                             ),
@@ -92,9 +93,11 @@ class EmergencyCard extends StatelessWidget {
   const EmergencyCard({
     Key? key,
     required this.emergency,
+    required this.emergencyService,
   }) : super(key: key);
 
   final Emergency emergency;
+  final EmergencyService emergencyService;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +105,8 @@ class EmergencyCard extends StatelessWidget {
         '${emergency.fecha.day}/${emergency.fecha.month}/${emergency.fecha.year}';
     final formattedTime =
         '${emergency.hora.hour.toString().padLeft(2, '0')}:${emergency.hora.minute.toString().padLeft(2, '0')}';
-
+    User paciente;
+    User medico;
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -150,17 +154,23 @@ class EmergencyCard extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.visibility),
-                onPressed: () {
-                  // Acción para ver el elemento
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ShowEmergencyScreen(
-                        emergency: emergency,
+                onPressed: () async {
+                  paciente = await emergencyService
+                      .getUsuarioById(emergency.userId.toString());
+                  medico = await emergencyService
+                      .getUsuarioById(emergency.medicoId.toString());
+
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ShowEmergencyScreen(
+                            emergency: emergency,
+                            paciente: paciente,
+                            medico: medico),
                       ),
-                    ),
-                  );
-                
+                    );
+                  }
                 },
               ),
             ],
