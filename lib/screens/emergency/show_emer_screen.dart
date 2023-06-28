@@ -1,5 +1,5 @@
-import 'package:clinica_app_taller/widgets/emer_user_card.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:clinica_app_taller/models/models.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
@@ -19,8 +19,6 @@ class ShowEmergencyScreen extends StatelessWidget {
     const BoxDecoration containerDecoration = BoxDecoration(
       color: Colors.white,
     );
-
-    
 
     return Scaffold(
       body: Container(
@@ -65,7 +63,8 @@ class ShowEmergencyScreen extends StatelessWidget {
                       const SizedBox(height: 8.0),
                       EmerUserCard(
                           user: medico,
-                          texto: '${medico.especialidad} - Cel ${medico.telefono}',
+                          texto:
+                              '${medico.especialidad} - Cel ${medico.telefono}',
                           trailing: 'Médico'),
                       const SizedBox(height: 8.0),
                       Card(
@@ -94,9 +93,11 @@ class ShowEmergencyScreen extends StatelessWidget {
                               const SizedBox(height: 8.0),
                               _emergenciaInfoRow(
                                 label1: 'Fecha',
-                                value1: emergency.fecha.toIso8601String(),
+                                value1: DateFormat('dd/MM/yyyy')
+                                    .format(emergency.fecha),
                                 label2: 'Hora',
-                                value2: emergency.hora.toIso8601String(),
+                                value2: DateFormat('hh:mm a')
+                                    .format(emergency.hora),
                               ),
                               const SizedBox(height: 8.0),
                               _emergenciaInfo(
@@ -109,43 +110,38 @@ class ShowEmergencyScreen extends StatelessWidget {
                                   label: 'Observación',
                                   value: emergency.observacion ??
                                       'El paciente presentaba dificultad para respirar, fiebre alta y tos persistente.'),
-                              if (emergency.diagnostico != null)
-                                const SizedBox(height: 8.0),
-                              Center(
-                                child: _emergenciaInfo(
-                                    label: 'Diagnóstico',
-                                    value: emergency.diagnostico ?? 'Neumonía'),
-                              ),
                             ],
                           ),
                         ),
                       ),
                       const SizedBox(height: 10.0),
-                      const Card(
+                      Card(
                         child: Padding(
-                          padding: EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(20.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Center(
                                 child: Text(
-                                  'Detalle Final',
-                                  style: TextStyle(
+                                  emergency.diagnostico != null
+                                      ? 'Diagnóstico Final'
+                                      : 'DIAGNÓSTICO PENDIENTE',
+                                  style: const TextStyle(
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.w300,
                                     color: Colors.black,
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 8,
+                              const SizedBox(
+                                height: 10.0,
                               ),
                               Center(
                                 child: Text(
-                                  'Se le diagnosticó con gastroenteritis aguda y se le brindó tratamiento con líquidos intravenosos y medicamentos para controlar los síntomas. Tras una mejoría significativa, se le dio de alta con instrucciones de cuidado en el hogar.',
+                                  emergency.diagnostico ?? '',
                                   textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontSize: 14.0,
+                                  style: const TextStyle(
+                                    fontSize: 15.0,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black,
                                   ),
@@ -156,27 +152,34 @@ class ShowEmergencyScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10.0),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                // Lógica para crear el diagnóstico final
-                              },
-                              child: const Text('Crear Diagnóstico Final'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            
+                            onPressed: () {
+                              // Lógica para crear el diagnóstico final
+                            },
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
                             ),
-                            const SizedBox(width: 8.0),
-                            ElevatedButton(
+                          ),
+                          const SizedBox(width: 8.0),
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.green[700]!),
+                              ),
                               onPressed: () {
                                 // Lógica para añadir información de análisis
                               },
-                              child:
-                                  const Text('Añadir Información de Análisis'),
-                            ),
-                          ],
-                        ),
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )),
+                        ],
                       ),
                       const SizedBox(height: 30.0),
                     ],

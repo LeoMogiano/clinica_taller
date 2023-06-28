@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clinica_app_taller/models/models.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
 class PerfilScreen extends StatelessWidget {
   const PerfilScreen({super.key, required this.user});
@@ -83,7 +84,7 @@ class PerfilScreen extends StatelessWidget {
                                 value1: user.carnet ?? 'No especificado',
                                 label2: 'Fecha de Nacimiento',
                                 value2: user.fechaNac != null
-                                    ? '${user.fechaNac!.day}/${user.fechaNac!.month}/${user.fechaNac!.year}'
+                                    ? DateFormat('dd/MM/yyyy').format(user.fechaNac!)
                                     : 'No especificada',
                               ),
                               _personalInfoRow(

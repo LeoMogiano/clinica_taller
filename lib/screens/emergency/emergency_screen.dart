@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:clinica_app_taller/models/models.dart';
 import 'package:clinica_app_taller/screens/screens.dart';
@@ -22,6 +23,18 @@ class EmergencyScreen extends StatelessWidget {
       );
     } else {
       return Scaffold(
+        floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[700] ,
+        onPressed: () {
+          /* Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => 
+            ),
+          ); */
+        },
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
         body: Container(
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -101,10 +114,9 @@ class EmergencyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate =
-        '${emergency.fecha.day}/${emergency.fecha.month}/${emergency.fecha.year}';
-    final formattedTime =
-        '${emergency.hora.hour.toString().padLeft(2, '0')}:${emergency.hora.minute.toString().padLeft(2, '0')}';
+    final formattedDate = DateFormat('dd/MM/yyyy').format(emergency.fecha);
+    final formattedTime = DateFormat('hh:mm a').format(emergency.hora);
+
     User paciente;
     User medico;
     return Card(

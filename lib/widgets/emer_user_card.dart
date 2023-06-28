@@ -73,7 +73,8 @@ class EmerUserCard extends StatelessWidget {
                 trailing,
                 style: const TextStyle(
                   fontSize: 12.0,
-                  color: Colors.grey,
+                  color: Color.fromARGB(255, 91, 90, 90),
+
                 ),
               ),
             ),
