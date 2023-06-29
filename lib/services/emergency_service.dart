@@ -8,7 +8,10 @@ class EmergencyService extends ChangeNotifier {
   final String _baseUrl = dotenv.env['BASE_URL'] ?? '';
 
   List<Emergency> emergencies = [];
-  bool isLoading = false;
+
+  bool _isLoading =
+      false; // Utiliza una variable privada para almacenar el estado de isLoading
+  bool get isLoading => _isLoading; // Getter para obtener el valor de isLoading
 
   User? paciente;
   User? medico;
@@ -18,25 +21,30 @@ class EmergencyService extends ChangeNotifier {
   }
 
   Future<List<Emergency>> getEmergencies() async {
-    final url = '$_baseUrl/api/emergencias';
-    final response = await http.get(Uri.parse(url));
+    _isLoading = true;
+    notifyListeners();
 
-    if (response.statusCode == 200) {
-      isLoading = true;
-      notifyListeners();
+    try {
+      final url = '$_baseUrl/api/emergencias';
+      final response = await http.get(Uri.parse(url));
 
-      final List<Emergency> parsedEmergencies =
-          Emergency.parseEmergencies(response.body);
-      emergencies = parsedEmergencies;
+      if (response.statusCode == 200) {
+        final List<Emergency> parsedEmergencies =
+            Emergency.parseEmergencies(response.body);
+        emergencies = parsedEmergencies;
 
-      isLoading = false;
-      notifyListeners();
-
-      return parsedEmergencies;
-    } else if (response.statusCode == 204) {
-      return [];
-    } else {
+        return parsedEmergencies;
+      } else if (response.statusCode == 204) {
+        return [];
+      } else {
+        throw Exception('Error al cargar los datos de emergencias');
+      }
+    } catch (e) {
+      print('Error al realizar la solicitud: $e');
       throw Exception('Error al cargar los datos de emergencias');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -59,13 +67,13 @@ class EmergencyService extends ChangeNotifier {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      isLoading = true;
-      notifyListeners();
+      /* _isLoading = true;
+      notifyListeners(); */
       final Map<String, dynamic> userData = json.decode(response.body);
       final User user = User.fromMap(userData['user']);
       paciente = user;
-      isLoading = false;
-      notifyListeners();
+      /* _isLoading = false;
+      notifyListeners(); */
       return user;
     } else if (response.statusCode == 404) {
       throw Exception('Usuario no encontrado');
@@ -74,5 +82,15 @@ class EmergencyService extends ChangeNotifier {
     }
   }
 
-  
+  Future<List<User>> loadMedicPac(String pacienteId, String medicoId) async {
+    final List<User> medicPac = [];
+
+    final paciente = await getUsuarioById(pacienteId);
+    final medico = await getUsuarioById(medicoId);
+
+    medicPac.add(paciente);
+    medicPac.add(medico);
+
+    return medicPac;
+  }
 }

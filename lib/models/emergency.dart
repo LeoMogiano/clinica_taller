@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
 class Emergency {
   Emergency({
@@ -9,6 +10,7 @@ class Emergency {
     required this.estado,
     required this.fecha,
     required this.hora,
+    this.detalleFin,
     this.diagnostico,
     required this.userId,
     this.nameUser,
@@ -21,7 +23,8 @@ class Emergency {
   String? observacion;
   String estado;
   DateTime fecha;
-  DateTime hora;
+  TimeOfDay hora;
+  String? detalleFin;
   String? diagnostico;
   int userId;
   String? nameUser;
@@ -38,7 +41,8 @@ class Emergency {
         observacion: json["observacion"],
         estado: json["estado"],
         fecha: DateTime.parse(json["fecha"]),
-        hora: DateTime.parse(json["hora"]),
+        hora: _parseTimeOfDay(json["hora"]),
+        detalleFin: json["detalle_fin"],
         diagnostico: json["diagnostico"],
         userId: json["user_id"],
         nameUser: json["name_user"],
@@ -52,7 +56,8 @@ class Emergency {
         "observacion": observacion,
         "estado": estado,
         "fecha": fecha.toIso8601String(),
-        "hora": hora.toIso8601String(),
+        "hora": _formatTimeOfDay(hora),
+        "detalle_fin": detalleFin,
         "diagnostico": diagnostico,
         "user_id": userId,
         "name_user": nameUser,
@@ -64,6 +69,7 @@ class Emergency {
       motivo == null &&
       gravedad == null &&
       observacion == null &&
+      detalleFin == null &&
       diagnostico == null;
 
   static List<Emergency> parseEmergencies(String jsonString) {
@@ -76,5 +82,17 @@ class Emergency {
     } else {
       return [];
     }
+  }
+
+  static TimeOfDay _parseTimeOfDay(String timeString) {
+    final dateTime = DateTime.parse(timeString);
+    return TimeOfDay.fromDateTime(dateTime);
+  }
+
+  static String _formatTimeOfDay(TimeOfDay timeOfDay) {
+    final now = DateTime.now();
+    final dateTime = DateTime(
+        now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    return dateTime.toIso8601String();
   }
 }

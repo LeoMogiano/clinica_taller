@@ -9,7 +9,11 @@ class UserService extends ChangeNotifier {
   final String _baseUrl = dotenv.env['BASE_URL'] ?? '';
   List<User> personalMed = [];
   List<User> pacientes = [];
-  bool isLoading = false;
+  
+  bool _isLoading = false; // Utiliza una variable privada para almacenar el estado de isLoading
+
+  bool get isLoading => _isLoading; // Getter para obtener el valor de isLoading
+
 
   UserService() {
     getPersonalMed();
@@ -17,45 +21,56 @@ class UserService extends ChangeNotifier {
   }
 
   Future<List<User>> getPersonalMed() async {
-    final url = '$_baseUrl/api/personal_med';
-    final response = await http.get(Uri.parse(url));
+    _isLoading = true; // Actualiza el valor de isLoading a true
+    notifyListeners();
 
-    if (response.statusCode == 200) {
-      isLoading = true;
-      notifyListeners();
+    try {
+      final url = '$_baseUrl/api/personal_med';
+      final response = await http.get(Uri.parse(url));
 
-      final List<User> personal = User.parseUsers(response.body);
-      personalMed = personal;
-
-      isLoading = false;
-      notifyListeners();
-
-      return personal;
-    } else if (response.statusCode == 204) {
-      return [];
-    } else {
+      if (response.statusCode == 200) {
+        final List<User> personal = User.parseUsers(response.body);
+        personalMed = personal;
+        return personal;
+      } else if (response.statusCode == 204) {
+        return [];
+      } else {
+        throw Exception('Error en cargar los datos de personal médico');
+      }
+    } catch (e) {
+      // Manejar cualquier excepción que pueda ocurrir
+      print('Error al realizar la solicitud: $e');
       throw Exception('Error en cargar los datos de personal médico');
+    } finally {
+      _isLoading = false; // Actualiza el valor de isLoading a false
+      notifyListeners();
     }
   }
 
   Future<List<User>> getPacientes() async {
-    final url = '$_baseUrl/api/pacientes';
-    final response = await http.get(Uri.parse(url));
+    _isLoading = true; // Actualiza el valor de isLoading a true
+    notifyListeners();
 
-    if (response.statusCode == 200) {
-      isLoading = true;
-      notifyListeners();
+    try {
+      final url = '$_baseUrl/api/pacientes';
+      final response = await http.get(Uri.parse(url));
 
-      final List<User> personal = User.parseUsers(response.body);
-      pacientes = personal;
-      isLoading = false;
-      notifyListeners();
-
-      return personal;
-    } else if (response.statusCode == 204) {
-      return [];
-    } else {
+      if (response.statusCode == 200) {
+        final List<User> personal = User.parseUsers(response.body);
+        pacientes = personal;
+        return personal;
+      } else if (response.statusCode == 204) {
+        return [];
+      } else {
+        throw Exception('Error en cargar los datos de los pacientes');
+      }
+    } catch (e) {
+      // Manejar cualquier excepción que pueda ocurrir
+      print('Error al realizar la solicitud: $e');
       throw Exception('Error en cargar los datos de los pacientes');
+    } finally {
+      _isLoading = false; // Actualiza el valor de isLoading a false
+      notifyListeners();
     }
   }
 
@@ -63,7 +78,7 @@ class UserService extends ChangeNotifier {
     final url = '$_baseUrl/api/create_user';
     final headers = <String, String>{'Content-Type': 'application/json'};
 
-    isLoading = true;
+    _isLoading = true;
     notifyListeners();
 
     try {
@@ -102,7 +117,7 @@ class UserService extends ChangeNotifier {
       print('Error al realizar la solicitud: $e');
     }
 
-    isLoading = false;
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -110,7 +125,7 @@ class UserService extends ChangeNotifier {
     final url = '$_baseUrl/api/update_user/$id';
     final headers = <String, String>{'Content-Type': 'application/json'};
 
-    isLoading = true;
+    _isLoading = true;
     notifyListeners();
 
     try {
@@ -149,7 +164,7 @@ class UserService extends ChangeNotifier {
       print('Error al realizar la solicitud: $e');
     }
 
-    isLoading = false;
+    _isLoading = false;
     notifyListeners();
   }
 }

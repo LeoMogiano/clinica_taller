@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -18,32 +17,17 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<UserService>(context);
-    
-
-    if (userService.isLoading) {
-      return const Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: null,
-          child: Icon(Icons.add),
-        ),
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
+    final userService = Provider.of<UserService>(context, listen: true);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.grey[700] ,
+        backgroundColor: Colors.grey[700],
         onPressed: () {
           Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) => CreatePScreen(
-               
                 paciente: paciente,
-                
               ),
             ),
           );
@@ -68,72 +52,85 @@ class UserScreen extends StatelessWidget {
                     Navigator.pop(context);
                   },
                 ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                    ),
-                    child: paciente
-                        ? ListView.builder(
-                            itemCount: userService.pacientes.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index == 0) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 18.0,
-                                  ),
-                                  child: Text(
-                                    title ?? 'Usuarios',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                final user = userService.pacientes[index - 1];
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0,
-                                  ),
-                                  child: ProfileCard(user: user),
-                                );
-                              }
-                            },
-                          )
-                        : ListView.builder(
-                            itemCount: userService.personalMed.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index == 0) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 18.0,
-                                  ),
-                                  child: Text(
-                                    title ?? 'Usuarios',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                final user = userService.personalMed[index - 1];
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0,
-                                  ),
-                                  child: ProfileCard(user: user),
-                                );
-                              }
-                            },
+                (userService.isLoading)
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                        ),
+                        height: MediaQuery.of(context).size.height - 90,
+                        child: const Align(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
                           ),
-                  ),
-                ),
+                          child: paciente
+                              ? ListView.builder(
+                                  itemCount: userService.pacientes.length + 1,
+                                  itemBuilder: (context, index) {
+                                    if (index == 0) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 18.0,
+                                        ),
+                                        child: Text(
+                                          title ?? 'Usuarios',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      final user =
+                                          userService.pacientes[index - 1];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0,
+                                        ),
+                                        child: ProfileCard(user: user),
+                                      );
+                                    }
+                                  },
+                                )
+                              : ListView.builder(
+                                  itemCount: userService.personalMed.length + 1,
+                                  itemBuilder: (context, index) {
+                                    if (index == 0) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 18.0,
+                                        ),
+                                        child: Text(
+                                          title ?? 'Usuarios',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      final user =
+                                          userService.personalMed[index - 1];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0,
+                                        ),
+                                        child: ProfileCard(user: user),
+                                      );
+                                    }
+                                  },
+                                ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -142,5 +139,3 @@ class UserScreen extends StatelessWidget {
     );
   }
 }
-
-

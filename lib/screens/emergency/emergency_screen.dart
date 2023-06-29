@@ -15,16 +15,9 @@ class EmergencyScreen extends StatelessWidget {
     final emergencyService =
         Provider.of<EmergencyService>(context, listen: true);
 
-    if (emergencyService.isLoading == true) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    } else {
-      return Scaffold(
-        floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.grey[700] ,
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[700],
         onPressed: () {
           /* Navigator.push(
             context,
@@ -35,70 +28,84 @@ class EmergencyScreen extends StatelessWidget {
         },
         child: const Icon(Icons.add, color: Colors.white),
       ),
-        body: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          child: SafeArea(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Column(
-                children: [
-                  NavBar(
-                    isHome: false,
-                    icon: Icons.arrow_back,
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                      ),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 18.0,
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+        child: SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Column(
+              children: [
+                NavBar(
+                  isHome: false,
+                  icon: Icons.arrow_back,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          emergencyService.isLoading
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                  ),
+                                  height:
+                                      MediaQuery.of(context).size.height -90,
+                                  child: const Align(
+                                    alignment: Alignment.center,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : 
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 18.0,
+                            ),
+                            child: Text(
+                              'LISTA DE EMERGENCIAS',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black,
                               ),
-                              child: Text(
-                                'LISTA DE EMERGENCIAS',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black,
+                            ),
+                          ),
+                          ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      emergencyService.emergencies.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final emergency =
+                                        emergencyService.emergencies[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: EmergencyCard(
+                                          emergency: emergency,
+                                          emergencyService: emergencyService),
+                                    );
+                                  },
                                 ),
-                              ),
-                            ),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: emergencyService.emergencies.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final emergency =
-                                    emergencyService.emergencies[index];
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: EmergencyCard(
-                                      emergency: emergency,
-                                      emergencyService: emergencyService),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 }
 
@@ -115,10 +122,10 @@ class EmergencyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formattedDate = DateFormat('dd/MM/yyyy').format(emergency.fecha);
-    final formattedTime = DateFormat('hh:mm a').format(emergency.hora);
+    final formattedTime =
+        TimeOfDay(hour: emergency.hora.hour, minute: emergency.hora.minute)
+            .format(context);
 
-    User paciente;
-    User medico;
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -167,20 +174,14 @@ class EmergencyCard extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.visibility),
                 onPressed: () async {
-                  paciente = await emergencyService
-                      .getUsuarioById(emergency.userId.toString());
-                  medico = await emergencyService
-                      .getUsuarioById(emergency.medicoId.toString());
-
                   if (context.mounted) {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => ShowEmergencyScreen(
-                            emergency: emergency,
-                            paciente: paciente,
-                            medico: medico),
-                      ),
+                          builder: (context) => ShowEmergencyScreen(
+                                emergency: emergency,
+                                emergencyService: emergencyService,
+                              )),
                     );
                   }
                 },
