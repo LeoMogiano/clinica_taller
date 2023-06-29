@@ -19,12 +19,12 @@ class EmergencyScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.grey[700],
         onPressed: () {
-          /* Navigator.push(
+          Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => 
+              builder: (context) =>  CreateEScreen()
             ),
-          ); */
+          );
         },
         child: const Icon(Icons.add, color: Colors.white),
       ),

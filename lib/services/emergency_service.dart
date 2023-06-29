@@ -9,10 +9,9 @@ class EmergencyService extends ChangeNotifier {
 
   List<Emergency> emergencies = [];
 
-  bool _isLoading =
-      false; // Utiliza una variable privada para almacenar el estado de isLoading
-  bool get isLoading => _isLoading; // Getter para obtener el valor de isLoading
-
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  
   User? paciente;
   User? medico;
 

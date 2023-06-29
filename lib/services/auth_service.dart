@@ -10,7 +10,9 @@ class AuthService extends ChangeNotifier {
   final String _baseUrl = dotenv.env['BASE_URL'] ?? '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   User? user;
-  bool isLoading = false;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
@@ -19,50 +21,53 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<bool> login(String email, String password) async {
-
     logout();
-    bool isLoading = true;
+    _isLoading = true;
     notifyListeners();
 
-    final url = '$_baseUrl/api/login';
-
-    final response = await http.post(Uri.parse(url), body: {
-      'email': email,
-      'password': password,
-    });
-
-    if (response.statusCode == 200) {
-
-      final responseData = json.decode(response.body);
-      final token = responseData['token'];
-     
-      final userResponse =
-          await http.get(Uri.parse('$_baseUrl/api/user'), headers: {
-        'Authorization': 'Bearer $token',
+    try {
+      final url = '$_baseUrl/api/login';
+      final response = await http.post(Uri.parse(url), body: {
+        'email': email,
+        'password': password,
       });
 
-      if (userResponse.statusCode == 200) {
-    
-        user = User.fromJson(userResponse.body);
-        final userData = jsonDecode(userResponse.body) as Map<String, dynamic>;
-        print(userData);
-        await storageWrite(token, userData['id'], userData['email'], userData['name']);
-        
-        bool isLoading = false;
-        notifyListeners();
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final token = responseData['token'];
 
-        return true;
+        final userResponse =
+            await http.get(Uri.parse('$_baseUrl/api/user'), headers: {
+          'Authorization': 'Bearer $token',
+        });
+
+        if (userResponse.statusCode == 200) {
+          user = User.fromJson(userResponse.body);
+          final userData =
+              jsonDecode(userResponse.body) as Map<String, dynamic>;
+          print(userData);
+          await storageWrite(
+              token, userData['id'], userData['email'], userData['name']);
+
+          return true;
+        } else {
+          print('Failed to login: ${response.statusCode}');
+          print('Error response: ${response.body}');
+          return false;
+          //throw Exception('Failed to fetch user data');
+        }
       } else {
-         print('Failed to login: ${response.statusCode}');
-         print('Error response: ${response.body}');
+        print('Failed to login: ${response.statusCode}');
+        print('Error response: ${response.body}');
         return false;
-        //throw Exception('Failed to fetch user data');
+        //throw Exception('Failed to login');
       }
-    } else {
-       print('Failed to login: ${response.statusCode}');
-       print('Error response: ${response.body}');
+    } catch (e) {
+      print('Error al realizar la solicitud: $e');
       return false;
-      //throw Exception('Failed to login');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -83,19 +88,15 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  
-
   Future<void> logout() async {
     await _storage.deleteAll();
   }
 
-  Future storageWrite(
-      String idToken, int id, String email, String name) async {
+  Future storageWrite(String idToken, int id, String email, String name) async {
     await _storage.write(key: 'token', value: idToken);
     await _storage.write(key: 'id', value: id.toString());
     await _storage.write(key: 'name', value: name);
     await _storage.write(key: 'email', value: email);
-
   }
 
   Future<User> readUser() async {
@@ -107,11 +108,6 @@ class AuthService extends ChangeNotifier {
       id: int.tryParse(id ?? ''),
       name: name ?? '',
       email: email ?? '',
-
     );
   }
-
-
-  
-
 }

@@ -58,7 +58,7 @@ class EditPScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20.0),
-                        BuildForm(
+                        _BuildForm(
                           user: user,
                           paciente: paciente,
                           edit: edit,
@@ -76,8 +76,8 @@ class EditPScreen extends StatelessWidget {
   }
 }
 
-class BuildForm extends StatefulWidget {
-  const BuildForm({
+class _BuildForm extends StatefulWidget {
+  const _BuildForm({
     Key? key,
     required this.user,
     required this.paciente,
@@ -89,10 +89,10 @@ class BuildForm extends StatefulWidget {
   final bool paciente;
 
   @override
-  BuildFormState createState() => BuildFormState();
+  _BuildFormState createState() => _BuildFormState();
 }
 
-class BuildFormState extends State<BuildForm> {
+class _BuildFormState extends State<_BuildForm> {
   final formKey = GlobalKey<FormState>();
   final List<String> bloodTypes = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
   @override
