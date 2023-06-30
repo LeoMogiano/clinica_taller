@@ -1,11 +1,12 @@
-
+import 'package:clinica_app_taller/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:clinica_app_taller/models/models.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class CreateEScreen extends StatelessWidget {
-  const CreateEScreen({super.key});
-
+  const CreateEScreen({super.key, required this.emergencyService});
+  final EmergencyService emergencyService;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +37,8 @@ class CreateEScreen extends StatelessWidget {
                         horizontal: 16.0,
                         vertical: 18.0,
                       ),
-                      children: const [
-                        Text(
+                      children:  [
+                        const Text(
                           'Registro de Emergencia',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -46,8 +47,8 @@ class CreateEScreen extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 20.0),
-                        _BuildForm()
+                        const SizedBox(height: 20.0),
+                        _BuildForm(emergencyService)
                       ],
                     ),
                   ),
@@ -62,31 +63,28 @@ class CreateEScreen extends StatelessWidget {
 }
 
 class _BuildForm extends StatefulWidget {
-  const _BuildForm({
-    Key? key,
-  }) : super(key: key);
+  const _BuildForm(this.emergencyService) ;
 
+final EmergencyService emergencyService;
   @override
   State<_BuildForm> createState() => _BuildFormState();
 }
 
 class _BuildFormState extends State<_BuildForm> {
   final formKey = GlobalKey<FormState>();
-  final List<String> bloodTypes = [
-    'O+',
-    'O-',
-    'A+',
-    'A-',
-    'B+',
-    'B-',
-    'AB+',
-    'AB-'
-  ];
-  
-  Emergency emergency = Emergency(estado: '', fecha: DateTime(1990), hora: const TimeOfDay(hour: 0, minute: 0), userId: 9, medicoId: 1);
-      
+ 
+
+  Emergency emergency = Emergency(
+      estado: '',
+      fecha: DateTime(1990),
+      hora: const TimeOfDay(hour: 0, minute: 0),
+      userId: 9,
+      medicoId: 1);
+
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context, listen: true);
+    
     return Form(
       key: formKey,
       child: Column(
@@ -103,7 +101,7 @@ class _BuildFormState extends State<_BuildForm> {
               if (value == null || value.isEmpty) {
                 return 'Este campo es requerido';
               }
-              return null; // Sin errores de validación
+              return null;
             },
             value: emergency.motivo,
           ),
@@ -141,16 +139,15 @@ class _BuildFormState extends State<_BuildForm> {
             selectedDate: emergency.fecha,
             onChanged: (value) {
               setState(() {
-                emergency.fecha =
-                    value!; // Actualiza el nombre del usuario con el nuevo valor ingresado
+                emergency.fecha = value!;
               });
             },
             validator: (value) {
               if (value == null) {
                 return 'Este campo es requerido';
               }
-              // Aquí puedes agregar una validación de formato de fecha si lo deseas
-              return null; // Sin errores de validación
+
+              return null;
             },
           ),
           const SizedBox(
@@ -184,16 +181,37 @@ class _BuildFormState extends State<_BuildForm> {
             },
             value: emergency.observacion,
           ),
-          
+          const SizedBox(height: 10),
+           MyDropdown<int>(
+            labelText: 'Selecciona un paciente',
+            items: _buildDropdownItems(userService.pacientes),
+            value: emergency.userId,
+            onChanged: (int? userId) {
+              emergency.userId = userId!;
+            },
+          ),
+          const SizedBox(height: 10),
+           MyDropdown<int>(
+            labelText: 'Selecciona un médico',
+            items: _buildDropdownItems(userService.personalMed),
+            value: emergency.medicoId,
+            onChanged: (int? userId) {
+             emergency.medicoId = userId!;
+            },
+          ),
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () async {
-              /* if (formKey.currentState!.validate() && !userService.isLoading) {
-                await userService.createUsuario(user, password, user.group!);
+              emergency.estado = 'En atención';
+              emergency.diagnostico = '';
+              emergency.nameUser = userService.pacientes.firstWhere((element) => element.id == emergency.userId).name;
+              emergency.id = await widget.emergencyService.getEmergencies().then((value) => value.length + 1);
+              if (formKey.currentState!.validate() && !widget.emergencyService.isLoading) {
+                await widget.emergencyService.createEmergencia(emergency);
               }
               if (context.mounted) {
                 Navigator.pop(context);
-              } */
+              }
             },
             child: const Text('Guardar cambios'),
           ),
@@ -201,4 +219,24 @@ class _BuildFormState extends State<_BuildForm> {
       ),
     );
   }
+}
+
+List<DropdownMenuItem<int>> _buildDropdownItems(List<User> users) {
+  Set<int> uniqueIds =
+      {}; // Utilizamos un conjunto para almacenar los IDs únicos
+  List<DropdownMenuItem<int>> items = [];
+
+  for (User user in users) {
+    if (!uniqueIds.contains(user.id)) {
+      uniqueIds.add(user.id!);
+      items.add(
+        DropdownMenuItem<int>(
+          value: user.id,
+          child: Text(user.name),
+        ),
+      );
+    }
+  }
+
+  return items;
 }

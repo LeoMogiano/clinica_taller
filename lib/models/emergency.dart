@@ -10,7 +10,7 @@ class Emergency {
     required this.estado,
     required this.fecha,
     required this.hora,
-    this.detalleFin,
+   
     this.diagnostico,
     required this.userId,
     this.nameUser,
@@ -24,7 +24,7 @@ class Emergency {
   String estado;
   DateTime fecha;
   TimeOfDay hora;
-  String? detalleFin;
+
   String? diagnostico;
   int userId;
   String? nameUser;
@@ -42,7 +42,7 @@ class Emergency {
         estado: json["estado"],
         fecha: DateTime.parse(json["fecha"]),
         hora: _parseTimeOfDay(json["hora"]),
-        detalleFin: json["detalle_fin"],
+     
         diagnostico: json["diagnostico"],
         userId: json["user_id"],
         nameUser: json["name_user"],
@@ -57,7 +57,7 @@ class Emergency {
         "estado": estado,
         "fecha": fecha.toIso8601String(),
         "hora": _formatTimeOfDay(hora),
-        "detalle_fin": detalleFin,
+
         "diagnostico": diagnostico,
         "user_id": userId,
         "name_user": nameUser,
@@ -69,7 +69,6 @@ class Emergency {
       motivo == null &&
       gravedad == null &&
       observacion == null &&
-      detalleFin == null &&
       diagnostico == null;
 
   static List<Emergency> parseEmergencies(String jsonString) {

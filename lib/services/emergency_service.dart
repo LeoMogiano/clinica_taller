@@ -11,7 +11,7 @@ class EmergencyService extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  
+
   User? paciente;
   User? medico;
 
@@ -91,5 +91,46 @@ class EmergencyService extends ChangeNotifier {
     medicPac.add(medico);
 
     return medicPac;
+  }
+
+  Future<void> createEmergencia(Emergency emergency) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final url = '$_baseUrl/api/create_emergencia';
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Charset': 'utf-8'
+      };
+
+      final emergencyData = emergency.toJson();
+      
+      final response = await http.post(Uri.parse(url), headers: headers, body: emergencyData);
+
+      if (response.statusCode == 201) {
+        final Emergency newEmergencia = emergency;
+        emergencies.add(newEmergencia);
+        print('Emergencia creada exitosamente');
+      } else {
+        final errors = json.decode(response.body)['errors'];
+        // Manejar los errores de validación devueltos por Laravel
+        print('Error al crear la emergencia: $errors');
+        print('Cuerpo de la respuesta: ${response.body}');
+        throw Exception('Error al crear la emergencia');
+      }
+    } catch (e) {
+      print('Error al realizar la solicitud: $e');
+
+      // Imprimir la respuesta completa en caso de error
+      if (e is http.Response) {
+        print('Respuesta completa: ${e.toString()}');
+      }
+
+      throw Exception('Error al crear la emergencia');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

@@ -22,7 +22,7 @@ class EmergencyScreen extends StatelessWidget {
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) =>  CreateEScreen()
+              builder: (context) =>  CreateEScreen(emergencyService: emergencyService,)
             ),
           );
         },
