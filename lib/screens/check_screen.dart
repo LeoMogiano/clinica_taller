@@ -1,8 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:clinica_app_taller/screens/screens.dart';
 import 'package:clinica_app_taller/services/services.dart';
 import 'package:provider/provider.dart';
-
 
 class CheckAuthScreen extends StatelessWidget {
   const CheckAuthScreen({super.key});
@@ -19,7 +19,7 @@ class CheckAuthScreen extends StatelessWidget {
               if (snapshot.data == true) {
                 Future.microtask(() async {
                   final user = await authService.readUser();
-                  print(user.name);
+
                   if (context.mounted) {
                     Navigator.pushAndRemoveUntil(
                       context,
@@ -37,7 +37,10 @@ class CheckAuthScreen extends StatelessWidget {
             } else {
               return const Scaffold(
                 body: Center(
-                  child: CircularProgressIndicator(),
+                  child: CupertinoActivityIndicator(
+                    color: Color(0xFF05539A),
+                    radius: 20,
+                  ),
                 ),
               );
             }

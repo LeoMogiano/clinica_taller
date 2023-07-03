@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
-    super.key, 
+    Key? key,
     required this.user,
-    
-  }) ;
+  }) : super(key: key);
 
   final User user;
- 
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +26,35 @@ class ProfileCard extends StatelessWidget {
                   child: ClipRRect(
                     key: user.foto != null ? Key(user.id.toString()) : null,
                     borderRadius: BorderRadius.circular(175.0),
-                    child: user.foto != null
-                        ? Image.network(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const CupertinoActivityIndicator(
+                          color: Color(0xFF05539A),
+                        ),
+                        if (user.foto != null)
+                          Image.network(
                             user.foto!,
                             width: 275.0,
                             height: 275.0,
                             fit: BoxFit.cover,
+                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              } else {
+                                return child;
+                              }
+                            },
                           )
-                        : const Image(
-                            image: AssetImage('assets/bale.jpg'),
+                        else
+                          Image.asset(
+                            'assets/bale.jpg',
                             width: 275.0,
                             height: 275.0,
                             fit: BoxFit.cover,
                           ),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -49,19 +63,36 @@ class ProfileCard extends StatelessWidget {
           child: ClipRRect(
             key: user.foto != null ? Key(user.id.toString()) : null,
             borderRadius: BorderRadius.circular(25.0),
-            child: user.foto != null
-                ? Image.network(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                const CupertinoActivityIndicator(
+                  color: Color(0xFF05539A),
+                ),
+                if (user.foto != null)
+                  Image.network(
+                    key: Key(user.id.toString()),
                     user.foto!,
                     width: 50.0,
                     height: 50.0,
                     fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return child;
+                      }
+                    },
                   )
-                : const Image(
-                    image: AssetImage('assets/bale.jpg'),
+                else
+                  Image.asset(
+                    'assets/bale.jpg',
                     width: 50.0,
                     height: 50.0,
                     fit: BoxFit.cover,
                   ),
+              ],
+            ),
           ),
         ),
         title: Text(user.name),

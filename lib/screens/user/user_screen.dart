@@ -60,7 +60,11 @@ class UserScreen extends StatelessWidget {
                         height: MediaQuery.of(context).size.height - 90,
                         child: const Align(
                           alignment: Alignment.center,
-                          child: CircularProgressIndicator(),
+                          child: CupertinoActivityIndicator(
+                            color: Color(0xFF05539A),
+                            radius: 20,
+                            
+                          ),
                         ),
                       )
                     : Expanded(

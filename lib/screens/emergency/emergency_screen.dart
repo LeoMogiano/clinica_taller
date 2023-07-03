@@ -22,8 +22,9 @@ class EmergencyScreen extends StatelessWidget {
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) =>  CreateEScreen(emergencyService: emergencyService,)
-            ),
+                builder: (context) => CreateEScreen(
+                      emergencyService: emergencyService,
+                    )),
           );
         },
         child: const Icon(Icons.add, color: Colors.white),
@@ -58,43 +59,43 @@ class EmergencyScreen extends StatelessWidget {
                                     color: Colors.grey[200],
                                   ),
                                   height:
-                                      MediaQuery.of(context).size.height -90,
+                                      MediaQuery.of(context).size.height - 90,
                                   child: const Align(
                                     alignment: Alignment.center,
-                                    child: CircularProgressIndicator(),
+                                    child: CupertinoActivityIndicator(
+                                      color: Color(0xFF05539A),
+                                      radius: 20,
+                                    ),
                                   ),
                                 )
-                              : 
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 18.0,
-                            ),
-                            child: Text(
-                              'LISTA DE EMERGENCIAS',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount:
-                                      emergencyService.emergencies.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final emergency =
-                                        emergencyService.emergencies[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: EmergencyCard(
-                                          emergency: emergency,
-                                          emergencyService: emergencyService),
-                                    );
-                                  },
+                              : const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 18.0,
+                                  ),
+                                  child: Text(
+                                    'LISTA DE EMERGENCIAS',
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: emergencyService.emergencies.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final emergency =
+                                  emergencyService.emergencies[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: EmergencyCard(
+                                    emergency: emergency,
+                                    emergencyService: emergencyService),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),

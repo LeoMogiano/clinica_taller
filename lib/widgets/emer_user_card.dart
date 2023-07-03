@@ -1,4 +1,5 @@
 import 'package:clinica_app_taller/models/models.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EmerUserCard extends StatelessWidget {
@@ -51,14 +52,37 @@ class EmerUserCard extends StatelessWidget {
             );
           },
           child: ClipRRect(
+            key: user.foto != null ? Key(user.id.toString()) : null,
             borderRadius: BorderRadius.circular(25.0),
-            child: Image(
-              image: user.foto != null
-                  ? NetworkImage(user.foto!) as ImageProvider
-                  : const AssetImage('assets/bale.jpg'),
-              width: 50.0,
-              height: 50.0,
-              fit: BoxFit.cover,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                 const CupertinoActivityIndicator(
+                  color: Color(0xFF05539A),
+                ),
+                if (user.foto != null)
+                  Image.network(
+                    key: Key(user.id.toString()),
+                    user.foto!,
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return child;
+                      }
+                    },
+                  )
+                else
+                  Image.asset(
+                    'assets/bale.jpg',
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+              ],
             ),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:clinica_app_taller/models/models.dart';
@@ -48,8 +49,11 @@ class ShowEmergencyScreen extends StatelessWidget {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
-                              heightFactor: 18.0,
-                              child: CircularProgressIndicator(),
+                              heightFactor: 16.0,
+                              child:  CupertinoActivityIndicator(
+                            color: Color(0xFF05539A),
+                            radius: 20,
+                          ),
                             );
                           } else if (snapshot.hasError) {
                             return const Center(

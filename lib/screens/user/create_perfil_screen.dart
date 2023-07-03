@@ -5,7 +5,7 @@ import 'package:clinica_app_taller/services/services.dart';
 import 'package:clinica_app_taller/widgets/widgets.dart';
 
 class CreatePScreen extends StatelessWidget {
-  const CreatePScreen({super.key, required this.paciente});
+  const CreatePScreen({Key? key, required this.paciente}) : super(key: key);
 
   final bool paciente;
 
@@ -90,6 +90,8 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
   ];
   User user = User(name: '', email: '');
   String password = '';
+  bool isSubmitted = false;
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: true);
@@ -107,7 +109,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
               });
             },
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (isSubmitted && (value == null || value.isEmpty)) {
                 return 'Este campo es requerido';
               }
               return null; // Sin errores de validación
@@ -124,13 +126,13 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
               });
             },
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (isSubmitted && (value == null || value.isEmpty)) {
                 return 'Por favor ingrese su correo';
               }
               String pattern =
                   r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
               RegExp regExp = RegExp(pattern);
-              return regExp.hasMatch(value) ? null : 'El correo no es válido';
+              return regExp.hasMatch(value!) ? null : 'El correo no es válido';
             },
             value: user.email,
           ),
@@ -143,10 +145,9 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
               setState(() {
                 password = value;
               });
-              print(password);
             },
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (isSubmitted && (value == null || value.isEmpty)) {
                 return 'Este campo es requerido';
               }
               return null;
@@ -159,12 +160,11 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
             selectedDate: user.fechaNac,
             onChanged: (value) {
               setState(() {
-                user.fechaNac =
-                    value; // Actualiza el nombre del usuario con el nuevo valor ingresado
+                user.fechaNac = value;
               });
             },
             validator: (value) {
-              if (value == null) {
+              if (isSubmitted && value == null) {
                 return 'Este campo es requerido';
               }
               // Aquí puedes agregar una validación de formato de fecha si lo deseas
@@ -185,7 +185,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (isSubmitted && (value == null || value.isEmpty)) {
                       return 'Este campo es requerido';
                     }
                     // Aquí puedes agregar una validación de formato de teléfono si lo deseas
@@ -205,7 +205,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (isSubmitted && (value == null || value.isEmpty)) {
                       return 'Este campo es requerido';
                     }
                     return null; // Sin errores de validación
@@ -236,7 +236,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
               });
             },
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (isSubmitted && (value == null || value.isEmpty)) {
                 return 'Este campo es requerido';
               }
               return null; // Sin errores de validación
@@ -263,7 +263,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
                 });
               },
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (isSubmitted && (value == null || value.isEmpty)) {
                   return 'Este campo es requerido';
                 }
                 return null; // Sin errores de validación
@@ -289,7 +289,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
                 });
               },
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (isSubmitted && (value == null || value.isEmpty)) {
                   return 'Este campo es requerido';
                 }
                 return null; // Sin errores de validación
@@ -322,7 +322,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (isSubmitted && (value == null || value.isEmpty)) {
                       return 'Este campo es requerido';
                     }
                     return null; // Sin errores de validación
@@ -350,7 +350,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (isSubmitted && (value == null || value.isEmpty)) {
                       return 'Este campo es requerido';
                     }
                     return null; // Sin errores de validación
@@ -371,7 +371,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (isSubmitted && (value == null || value.isEmpty)) {
                       return 'Este campo es requerido';
                     }
                     // Aquí puedes agregar una validación de formato de teléfono si lo deseas
@@ -389,7 +389,7 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (isSubmitted && (value == null || value.isEmpty)) {
                       return 'Este campo es requerido';
                     }
                     // Aquí puedes agregar una validación de formato de teléfono si lo deseas
@@ -400,18 +400,33 @@ class _BuildFormCreateState extends State<BuildFormCreate> {
               : const SizedBox(height: 0),
           const SizedBox(height: 10),
           ElevatedButton(
+            child: const Text('Guardar'),
             onPressed: () async {
-              if (formKey.currentState!.validate() && !userService.isLoading) {
+              int lastPersonalMedId = getLastId(userService.personalMed);
+              int lastPacientesId = getLastId(userService.pacientes);
+              user.id = lastPersonalMedId > lastPacientesId
+                  ? lastPersonalMedId + 1
+                  : lastPacientesId + 1;
+              setState(() {
+                isSubmitted = true;
+              });
+              if (formKey.currentState!.validate()) {
                 await userService.createUsuario(user, password, user.group!);
-              }
-              if (context.mounted) {
-                Navigator.pop(context);
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
               }
             },
-            child: const Text('Guardar cambios'),
           ),
         ],
       ),
     );
   }
+}
+
+int getLastId(List<User> userList) {
+  if (userList.isEmpty) {
+    return 0; // Si la lista está vacía, retorna 0 como el último ID
+  }
+  return userList.last.id!;
 }

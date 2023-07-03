@@ -5,7 +5,7 @@ import 'package:clinica_app_taller/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class CreateEScreen extends StatelessWidget {
-  const CreateEScreen({super.key, required this.emergencyService});
+  const CreateEScreen({Key? key, required this.emergencyService}) : super(key: key);
   final EmergencyService emergencyService;
 
   @override
@@ -37,7 +37,7 @@ class CreateEScreen extends StatelessWidget {
                         horizontal: 16.0,
                         vertical: 18.0,
                       ),
-                      children:  [
+                      children: [
                         const Text(
                           'Registro de Emergencia',
                           textAlign: TextAlign.center,
@@ -48,7 +48,7 @@ class CreateEScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20.0),
-                        _BuildForm(emergencyService)
+                        _BuildForm(emergencyService),
                       ],
                     ),
                   ),
@@ -63,28 +63,31 @@ class CreateEScreen extends StatelessWidget {
 }
 
 class _BuildForm extends StatefulWidget {
-  const _BuildForm(this.emergencyService) ;
+  const _BuildForm(this.emergencyService);
 
-final EmergencyService emergencyService;
+  final EmergencyService emergencyService;
+
   @override
   State<_BuildForm> createState() => _BuildFormState();
 }
 
 class _BuildFormState extends State<_BuildForm> {
   final formKey = GlobalKey<FormState>();
- 
 
   Emergency emergency = Emergency(
-      estado: '',
-      fecha: DateTime(1990),
-      hora: const TimeOfDay(hour: 0, minute: 0),
-      userId: 9,
-      medicoId: 1);
+    estado: '',
+    fecha: DateTime(1990),
+    hora: const TimeOfDay(hour: 0, minute: 0),
+    userId: 9,
+    medicoId: 1,
+  );
+
+  bool isSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: true);
-    
+
     return Form(
       key: formKey,
       child: Column(
@@ -98,16 +101,14 @@ class _BuildFormState extends State<_BuildForm> {
               });
             },
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (isSubmitted && (value == null || value.isEmpty)) {
                 return 'Este campo es requerido';
               }
               return null;
             },
             value: emergency.motivo,
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           MyDropdown<String>(
             labelText: 'Gravedad',
             items: const [
@@ -125,15 +126,19 @@ class _BuildFormState extends State<_BuildForm> {
               ),
             ],
             value: emergency.gravedad,
+            validator: (value) {
+              if (isSubmitted && value == null) {
+                return 'Este campo es requerido';
+              }
+              return null;
+            },
             onChanged: (value) {
               setState(() {
                 emergency.gravedad = value;
               });
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           MyDateField(
             labelText: 'Fecha de Emergencia',
             selectedDate: emergency.fecha,
@@ -143,16 +148,13 @@ class _BuildFormState extends State<_BuildForm> {
               });
             },
             validator: (value) {
-              if (value == null) {
+              if (isSubmitted && value == null) {
                 return 'Este campo es requerido';
               }
-
               return null;
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           MyTimeField(
             labelText: 'Hora',
             selectedTime: emergency.hora,
@@ -162,9 +164,7 @@ class _BuildFormState extends State<_BuildForm> {
               });
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           MyTextArea(
             labelText: 'Observación',
             maxLines: null,
@@ -174,43 +174,65 @@ class _BuildFormState extends State<_BuildForm> {
               });
             },
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (isSubmitted && (value == null || value.isEmpty)) {
                 return 'Este campo es requerido';
               }
-              return null; // Sin errores de validación
+              return null;
             },
             value: emergency.observacion,
           ),
           const SizedBox(height: 10),
-           MyDropdown<int>(
+          MyDropdown<int>(
             labelText: 'Selecciona un paciente',
             items: _buildDropdownItems(userService.pacientes),
             value: emergency.userId,
             onChanged: (int? userId) {
-              emergency.userId = userId!;
+              setState(() {
+                emergency.userId = userId!;
+              });
+            },
+            validator: (value) {
+              if (isSubmitted && value == null) {
+                return 'Este campo es requerido';
+              }
+              return null;
             },
           ),
           const SizedBox(height: 10),
-           MyDropdown<int>(
+          MyDropdown<int>(
             labelText: 'Selecciona un médico',
             items: _buildDropdownItems(userService.personalMed),
             value: emergency.medicoId,
             onChanged: (int? userId) {
-             emergency.medicoId = userId!;
+              setState(() {
+                emergency.medicoId = userId!;
+              });
+            },
+            validator: (value) {
+              if (isSubmitted && value == null) {
+                return 'Este campo es requerido';
+              }
+              return null;
             },
           ),
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () async {
-              emergency.estado = 'En atención';
-              emergency.diagnostico = '';
-              emergency.nameUser = userService.pacientes.firstWhere((element) => element.id == emergency.userId).name;
-              emergency.id = await widget.emergencyService.getEmergencies().then((value) => value.length + 1);
+              setState(() {
+                isSubmitted = true;
+              });
+
               if (formKey.currentState!.validate() && !widget.emergencyService.isLoading) {
+                emergency.estado = 'En atención';
+                emergency.diagnostico = '';
+                emergency.nameUser =
+                    userService.pacientes.firstWhere((element) => element.id == emergency.userId).name;
+                emergency.id = await widget.emergencyService.getEmergencies().then((value) => value.length + 1);
+
                 await widget.emergencyService.createEmergencia(emergency);
-              }
-              if (context.mounted) {
-                Navigator.pop(context);
+                if(context.mounted) {
+                  Navigator.pop(context);
+                }
               }
             },
             child: const Text('Guardar cambios'),
