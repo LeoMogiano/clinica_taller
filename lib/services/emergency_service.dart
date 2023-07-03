@@ -105,8 +105,9 @@ class EmergencyService extends ChangeNotifier {
       };
 
       final emergencyData = emergency.toJson();
-      
-      final response = await http.post(Uri.parse(url), headers: headers, body: emergencyData);
+
+      final response = await http.post(Uri.parse(url),
+          headers: headers, body: emergencyData);
 
       if (response.statusCode == 201) {
         final Emergency newEmergencia = emergency;
@@ -128,6 +129,52 @@ class EmergencyService extends ChangeNotifier {
       }
 
       throw Exception('Error al crear la emergencia');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateEmergencia(String id, Emergency emergency) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final url = '$_baseUrl/api/update_emergencia/$id';
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Charset': 'utf-8'
+      };
+
+      final emergencyData = emergency.toJson();
+
+      final response =
+          await http.put(Uri.parse(url), headers: headers, body: emergencyData);
+
+      if (response.statusCode == 200) {
+        final updatedEmergencia = emergency;
+        // Actualizar la emergencia existente en la lista de emergencias
+        final index = emergencies.indexWhere((e) => e.id.toString() == id);
+        if (index != -1) {
+          emergencies[index] = updatedEmergencia;
+        }
+        print('Emergencia actualizada exitosamente');
+      } else {
+        final errors = json.decode(response.body)['errors'];
+        // Manejar los errores de validación devueltos por Laravel
+        print('Error al actualizar la emergencia: $errors');
+        print('Cuerpo de la respuesta: ${response.body}');
+        throw Exception('Error al actualizar la emergencia');
+      }
+    } catch (e) {
+      print('Error al realizar la solicitud: $e');
+
+      // Imprimir la respuesta completa en caso de error
+      if (e is http.Response) {
+        print('Respuesta completa: ${e.toString()}');
+      }
+
+      throw Exception('Error al actualizar la emergencia');
     } finally {
       _isLoading = false;
       notifyListeners();

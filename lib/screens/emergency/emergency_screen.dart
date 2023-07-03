@@ -169,22 +169,26 @@ class EmergencyCard extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  // Acción para editar el elemento
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => EditEScreen(
+                            emergencyService: emergencyService,
+                            emergency: emergency)),
+                  );
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.visibility),
-                onPressed: () async {
-                  if (context.mounted) {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => ShowEmergencyScreen(
-                                emergency: emergency,
-                                emergencyService: emergencyService,
-                              )),
-                    );
-                  }
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => ShowEmergencyScreen(
+                              emergency: emergency,
+                              emergencyService: emergencyService,
+                            )),
+                  );
                 },
               ),
             ],
