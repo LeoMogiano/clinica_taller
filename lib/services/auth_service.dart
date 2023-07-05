@@ -45,7 +45,7 @@ class AuthService extends ChangeNotifier {
           user = User.fromJson(userResponse.body);
           final userData =
               jsonDecode(userResponse.body) as Map<String, dynamic>;
-          print(userData);
+          
           await storageWrite(
               token, userData['id'], userData['email'], userData['name']);
 

@@ -1,5 +1,6 @@
 export 'package:clinica_app_taller/widgets/button_home.dart';
 export 'package:clinica_app_taller/widgets/emer_user_card.dart';
+export 'package:clinica_app_taller/widgets/historia_card.dart';
 export 'package:clinica_app_taller/widgets/my_datefield.dart';
 export 'package:clinica_app_taller/widgets/my_dropdown.dart';
 export 'package:clinica_app_taller/widgets/my_input.dart';

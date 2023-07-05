@@ -99,19 +99,35 @@ class HomeScreen extends StatelessWidget {
                               },
                             ),
                             const SizedBox(width: 18.0),
-                            const ButtonHome(
+                            ButtonHome(
                               title: "Detección Facial",
                               imagePath: 'assets/ident.png',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => const FacialScreen(),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10.0),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
                         child: Center(
                           child: ButtonHome(
                             title: "Historias Médicas",
                             imagePath: 'assets/history.png',
+                            onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => const HistoriaScreen(),
+                                  ),
+                                );
+                              },
                           ),
                         ),
                       ),

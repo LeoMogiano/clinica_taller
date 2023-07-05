@@ -59,7 +59,7 @@ class EmergencyScreen extends StatelessWidget {
                                     color: Colors.grey[200],
                                   ),
                                   height:
-                                      MediaQuery.of(context).size.height - 90,
+                                      MediaQuery.of(context).size.height - 180,
                                   child: const Align(
                                     alignment: Alignment.center,
                                     child: CupertinoActivityIndicator(

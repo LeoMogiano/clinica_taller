@@ -55,10 +55,15 @@ class HistoriaMedica {
         "user_id": userId
       };
 
-  static List<HistoriaMedica> parseHistoriaMedicaList(String jsonString) {
-    final List<dynamic> parsedJson = json.decode(jsonString);
-    return parsedJson
-        .map((historiaMedica) => HistoriaMedica.fromMap(historiaMedica))
-        .toList();
+  static List<HistoriaMedica> parseHistorias(String jsonString) {
+    final Map<String, dynamic> parsedJson = json.decode(jsonString);
+    final List<dynamic>? historiaListJson = parsedJson['historias'];
+    if (historiaListJson != null) {
+      return historiaListJson
+          .map((historia) => HistoriaMedica.fromMap(historia))
+          .toList();
+    } else {
+      return [];
+    }
   }
 }

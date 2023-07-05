@@ -138,12 +138,12 @@ class UserService extends ChangeNotifier {
       if (response.statusCode == 200) {
         // El usuario se actualizó correctamente
         if (group == 'Personal Médico') {
-          final index = personalMed.indexWhere((u) => u.id == id);
+          final index = personalMed.indexWhere((u) => u.id.toString() == id);
           if (index != -1) {
             personalMed[index] = user;
           }
         } else if (group == 'Pacientes') {
-          final index = pacientes.indexWhere((u) => u.id == id);
+          final index = pacientes.indexWhere((u) => u.id.toString() == id);
           if (index != -1) {
             pacientes[index] = user;
           }
