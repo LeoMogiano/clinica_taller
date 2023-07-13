@@ -41,9 +41,18 @@ class Analisis {
       };
 
   static List<Analisis> parseAnalisisList(String jsonString) {
-    final List<dynamic> parsedJson = json.decode(jsonString);
-    return parsedJson.map((analisis) => Analisis.fromMap(analisis)).toList();
+    final Map<String,dynamic> parsedJson = json.decode(jsonString);
+    final List<dynamic>? analisisListJson = parsedJson['analisis'];
+    if (analisisListJson != null) {
+      return analisisListJson
+          .map((analisis) => Analisis.fromMap(analisis))
+          .toList();
+    } else {
+      return [];
+    }
   }
+
+
 
   static TimeOfDay _parseTimeOfDay(String timeString) {
     final dateTime = DateTime.parse(timeString);

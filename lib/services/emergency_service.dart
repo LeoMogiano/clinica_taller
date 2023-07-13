@@ -8,6 +8,7 @@ class EmergencyService extends ChangeNotifier {
   final String _baseUrl = dotenv.env['BASE_URL'] ?? '';
 
   List<Emergency> emergencies = [];
+  List<Analisis> analisis = [];
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -133,7 +134,34 @@ class EmergencyService extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+
+    
   }
+
+  Future<List<Analisis>> getAnalisisByEmergency(int id) async {
+      
+      try {
+        final url = '$_baseUrl/api/analisis/emergencia/$id';
+        final response = await http.get(Uri.parse(url));
+
+        if (response.statusCode == 200) {
+          final List<Analisis> analisisTemp =
+              Analisis.parseAnalisisList(response.body);
+          analisis = analisisTemp;
+          return analisis;
+        } else if (response.statusCode == 204) {
+          return [];
+        } else {
+          throw Exception('Error en cargar los datos de analisis');
+        }
+      } catch (e) {
+        // Manejar cualquier excepción que pueda ocurrir
+        print('Error al realizar la solicitud: $e');
+        throw Exception('Error en cargar los datos de analisis');
+      } finally {
+        
+      }
+    }
 
   Future<void> updateEmergencia(String id, Emergency emergency) async {
     _isLoading = true;
