@@ -1,3 +1,4 @@
+import 'package:clinica_app_taller/screens/screens.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +21,7 @@ class ShowEmergencyScreen extends StatelessWidget {
     const BoxDecoration containerDecoration = BoxDecoration(
       color: Colors.white,
     );
-    
+
     return Scaffold(
       body: Container(
         decoration: containerDecoration,
@@ -37,7 +38,7 @@ class ShowEmergencyScreen extends StatelessWidget {
                   child: Container(
                     color: Colors.grey[200],
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
                         children: [
                           FutureBuilder<List<User>>(
@@ -206,9 +207,8 @@ class ShowEmergencyScreen extends StatelessWidget {
                                   child: Text(
                                       'Error al cargar los datos de paciente y médico'),
                                 );
-                              } else if (snapshot.hasData) {
-                                
-
+                              } else if (snapshot.hasData &&
+                                  snapshot.data!.isNotEmpty) {
                                 return Column(
                                   children: [
                                     const Center(
@@ -226,21 +226,61 @@ class ShowEmergencyScreen extends StatelessWidget {
                                       shrinkWrap: true,
                                       physics:
                                           const NeverScrollableScrollPhysics(),
-                                      itemCount: emergencyService.analisis.length,
+                                      itemCount:
+                                          emergencyService.analisis.length,
                                       itemBuilder: (context, index) {
-                                        final Analisis item = emergencyService.analisis[index];
-                                        return AnalisisCard(analisis: item);
+                                        final Analisis item =
+                                            emergencyService.analisis[index];
+                                        return Column(
+                                          children: [
+                                            AnalisisCard(
+                                                analisis: item,
+                                                emergencyService:
+                                                    emergencyService),
+                                          ],
+                                        );
                                       },
                                     ),
                                   ],
                                 );
                               } else {
-                                return const Center(
-                                  child: Text('No hay datos disponibles'),
-                                );
+                                return const Text(
+                                    'No se encontraron análisis asociados a esta emergencia');
                               }
                             },
-                          )
+                          ),
+                          const SizedBox(height: 20.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FloatingActionButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => CreateAScreen(
+                                        emergencyService: emergencyService,
+                                        emergency: emergency,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                backgroundColor: const Color(0xFF05539A),
+                                heroTag: 'addButton',
+                                child: const Icon(Icons.add),
+                              ),
+                              if (emergency.diagnostico == null)
+                                const SizedBox(width: 20.0),
+                              if (emergency.diagnostico == null)
+                                FloatingActionButton(
+                                  onPressed: () {},
+                                  backgroundColor: const Color(0xFFe11709),
+                                  heroTag: 'checkButton',
+                                  child: const Icon(Icons.check),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 20.0),
                         ],
                       ),
                     ),

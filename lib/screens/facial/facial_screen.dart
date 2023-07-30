@@ -162,12 +162,10 @@ class _FacialScreenState extends State<FacialScreen> {
                                   ],
                                 ),
                               const SizedBox(height: 20),
-
                               if (_imageFile != null && _isIdentifying == true)
                                 const CupertinoActivityIndicator(
                                   color: Color(0xFF085C9D),
                                 ),
-
                               if (_imageFile != null && _isIdentifying == false)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -214,7 +212,8 @@ class _FacialScreenState extends State<FacialScreen> {
                                       ),
                                   ],
                                 ),
-                              if (_identificationCompleted == true && _isIdentifying == false)
+                              if (_identificationCompleted == true &&
+                                  _isIdentifying == false)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -238,34 +237,33 @@ class _FacialScreenState extends State<FacialScreen> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 40),
-                                    if( _identifiedUser != null)
+                                    if (_identifiedUser != null)
+                                      const SizedBox(width: 40),
+                                    if (_identifiedUser != null)
                                       InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) => ShowFScreen(
-                                              
-                                              user: _identifiedUser!,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) => ShowFScreen(
+                                                user: _identifiedUser!,
+                                              ),
                                             ),
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 60,
+                                          height: 60,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Color(0xFF085C9D),
                                           ),
-                                        );
-                                      },
-                                      
-                                      child: Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Color(0xFF085C9D),
-                                        ),
-                                        child: const Icon(
-                                          Icons.medical_information_outlined,
-                                          color: Colors.white,
+                                          child: const Icon(
+                                            Icons.medical_information_outlined,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               const SizedBox(height: 30),
@@ -275,7 +273,6 @@ class _FacialScreenState extends State<FacialScreen> {
                               if (_identifiedUser != null)
                                 Text(
                                     'Usuario identificado: ${_identifiedUser!.name}'),
-                              
                             ],
                           ),
                         ),

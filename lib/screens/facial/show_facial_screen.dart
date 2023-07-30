@@ -273,7 +273,15 @@ class ShowFScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) =>
+                                                     CreateEFScreen(userId: user.id!,)),
+                                          );
+                                        
+                                        },
                                         child: Container(
                                           width: 60,
                                           height: 60,

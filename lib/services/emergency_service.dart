@@ -134,34 +134,7 @@ class EmergencyService extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
-
-    
   }
-
-  Future<List<Analisis>> getAnalisisByEmergency(int id) async {
-      
-      try {
-        final url = '$_baseUrl/api/analisis/emergencia/$id';
-        final response = await http.get(Uri.parse(url));
-
-        if (response.statusCode == 200) {
-          final List<Analisis> analisisTemp =
-              Analisis.parseAnalisisList(response.body);
-          analisis = analisisTemp;
-          return analisis;
-        } else if (response.statusCode == 204) {
-          return [];
-        } else {
-          throw Exception('Error en cargar los datos de analisis');
-        }
-      } catch (e) {
-        // Manejar cualquier excepción que pueda ocurrir
-        print('Error al realizar la solicitud: $e');
-        throw Exception('Error en cargar los datos de analisis');
-      } finally {
-        
-      }
-    }
 
   Future<void> updateEmergencia(String id, Emergency emergency) async {
     _isLoading = true;
@@ -206,6 +179,90 @@ class EmergencyService extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<List<Analisis>> getAnalisisByEmergency(int id) async {
+    try {
+      final url = '$_baseUrl/api/analisis/emergencia/$id';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final List<Analisis> analisisTemp =
+            Analisis.parseAnalisisList(response.body);
+        analisis = analisisTemp;
+        return analisis;
+      } else if (response.statusCode == 204) {
+        return [];
+      } else {
+        throw Exception('Error en cargar los datos de analisis');
+      }
+    } catch (e) {
+      // Manejar cualquier excepción que pueda ocurrir
+      print('Error al realizar la solicitud: $e');
+      throw Exception('Error en cargar los datos de analisis');
+    } finally {}
+  }
+
+  Future<void> deleteAnalisis(int id) async {
+    try {
+      final url = '$_baseUrl/api/delete_analisis/$id';
+      final response = await http.delete(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        // Analisis eliminado exitosamente
+        print('Análisis eliminado exitosamente');
+        // Remover el análisis de la lista analisis
+        analisis.removeWhere((a) => a.id == id);
+      } else if (response.statusCode == 404) {
+        throw Exception('Análisis no encontrado');
+      } else {
+        throw Exception('Error al eliminar el análisis');
+      }
+    } catch (e) {
+      print('Error al realizar la solicitud: $e');
+
+      // Imprimir la respuesta completa en caso de error
+      if (e is http.Response) {
+        print('Respuesta completa: ${e.toString()}');
+      }
+
+      throw Exception('Error al eliminar el análisis');
+    } finally {}
+  }
+
+  Future<void> createAnalisis(Analisis analisys) async {
+    try {
+      final url = '$_baseUrl/api/create_analisis';
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Charset': 'utf-8'
+      };
+
+      final analisisData = analisys.toJson();
+
+      final response =
+          await http.post(Uri.parse(url), headers: headers, body: analisisData);
+
+      if (response.statusCode == 201) {
+        print('Análisis creado exitosamente');
+        analisis.add(analisys);
+      } else {
+        final errors = json.decode(response.body)['errors'];
+        // Manejar los errores de validación devueltos por Laravel
+        print('Error al crear el análisis: $errors');
+        print('Cuerpo de la respuesta: ${response.body}');
+        throw Exception('Error al crear el análisis');
+      }
+    } catch (e) {
+      print('Error al realizar la solicitud: $e');
+
+      // Imprimir la respuesta completa en caso de error
+      if (e is http.Response) {
+        print('Respuesta completa: ${e.toString()}');
+      }
+
+      throw Exception('Error al crear el análisis');
     }
   }
 }

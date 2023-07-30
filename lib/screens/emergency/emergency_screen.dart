@@ -12,8 +12,7 @@ class EmergencyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final emergencyService =
-        Provider.of<EmergencyService>(context, listen: true);
+    final emergencyService = Provider.of<EmergencyService>(context, listen: true);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -22,9 +21,10 @@ class EmergencyScreen extends StatelessWidget {
           Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (context) => CreateEScreen(
-                      emergencyService: emergencyService,
-                    )),
+              builder: (context) => CreateEScreen(
+                emergencyService: emergencyService,
+              ),
+            ),
           );
         },
         child: const Icon(Icons.add, color: Colors.white),
@@ -34,75 +34,67 @@ class EmergencyScreen extends StatelessWidget {
           color: Colors.white,
         ),
         child: SafeArea(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Column(
-              children: [
-                NavBar(
-                  isHome: false,
-                  icon: Icons.arrow_back,
-                  onPressed: () => Navigator.pop(context),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          emergencyService.isLoading
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                  ),
-                                  height:
-                                      MediaQuery.of(context).size.height - 180,
-                                  child: const Align(
-                                    alignment: Alignment.center,
-                                    child: CupertinoActivityIndicator(
-                                      color: Color(0xFF05539A),
-                                      radius: 20,
-                                    ),
-                                  ),
-                                )
-                              : const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 18.0,
-                                  ),
-                                  child: Text(
-                                    'LISTA DE EMERGENCIAS',
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: emergencyService.emergencies.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final emergency =
-                                  emergencyService.emergencies[index];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: EmergencyCard(
-                                    emergency: emergency,
-                                    emergencyService: emergencyService),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+          child: Column(
+            children: [
+              NavBar(
+                isHome: false,
+                icon: Icons.arrow_back,
+                onPressed: () => Navigator.pop(context),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
                   ),
+                  child: emergencyService.isLoading
+                      ? Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                          ),
+                          child: const Align(
+                            alignment: Alignment.center,
+                            child: CupertinoActivityIndicator(
+                              color: Color(0xFF05539A),
+                              radius: 20,
+                            ),
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 18.0,
+                              ),
+                              child: Text(
+                                'LISTA DE EMERGENCIAS',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: emergencyService.emergencies.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final emergency = emergencyService.emergencies[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: EmergencyCard(
+                                      emergency: emergency,
+                                      emergencyService: emergencyService,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 30.0), // A spacer to push content down
+                          ],
+                        ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

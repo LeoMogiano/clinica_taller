@@ -1,10 +1,12 @@
 export 'package:clinica_app_taller/screens/check_screen.dart';
+export 'package:clinica_app_taller/screens/emergency/create_alisis_screen.dart';
 export 'package:clinica_app_taller/screens/emergency/create_emer_screen.dart';
 export 'package:clinica_app_taller/screens/emergency/edit_emer_screen.dart';
 export 'package:clinica_app_taller/screens/emergency/emergency_screen.dart';
 export 'package:clinica_app_taller/screens/emergency/show_emer_screen.dart';
-export 'package:clinica_app_taller/screens/facial/show_facial_screen.dart';
+export 'package:clinica_app_taller/screens/facial/emergency_fast_screend.dart';
 export 'package:clinica_app_taller/screens/facial/facial_screen.dart';
+export 'package:clinica_app_taller/screens/facial/show_facial_screen.dart';
 export 'package:clinica_app_taller/screens/h_medica/historia_screen.dart';
 export 'package:clinica_app_taller/screens/h_medica/show_hist_screen.dart';
 export 'package:clinica_app_taller/screens/home_screen.dart';

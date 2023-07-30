@@ -1,5 +1,6 @@
 import 'package:clinica_app_taller/models/models.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:clinica_app_taller/services/emergency_service.dart';
+/* import 'package:flutter/cupertino.dart'; */
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -7,9 +8,11 @@ class AnalisisCard extends StatelessWidget {
   const AnalisisCard({
     Key? key,
     required this.analisis,
+    required this.emergencyService,
   }) : super(key: key);
 
   final Analisis analisis;
+  final EmergencyService emergencyService;
 
   @override
   Widget build(BuildContext context) {
@@ -56,19 +59,17 @@ class AnalisisCard extends StatelessWidget {
               ),
             ],
           ),
-
-          
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 4.0), // Ajustar el espaciado vertical
-              Text('Fecha: $formattedDate - $formattedTime',
-              style: const TextStyle(
-                fontWeight: FontWeight.w300,
-                fontSize: 12.0,
-                color: Colors.grey,
-              ),
-              
+              Text(
+                'Fecha: $formattedDate - $formattedTime',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 12.0,
+                  color: Colors.grey,
+                ),
               ),
             ],
           ),
@@ -90,14 +91,32 @@ class AnalisisCard extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  /* Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => ShowEmergencyScreen(
-                              emergency: emergency,
-                              emergencyService: emergencyService,
-                            )),
-                  ); */
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Eliminar Emergencia'),
+                      content: const Text(
+                          '¿Está seguro que desea eliminar esta emergencia?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancelar'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await emergencyService.deleteAnalisis(analisis.id!);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: const Text('Eliminar'),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
             ],

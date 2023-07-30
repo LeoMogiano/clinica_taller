@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 class HistoriaCard extends StatelessWidget {
   const HistoriaCard({
     Key? key,
-    required this.user, required this.value, required this.historia,
+    required this.user,
+    required this.value,
+    required this.historia,
   }) : super(key: key);
 
   final User user;
@@ -41,7 +43,8 @@ class HistoriaCard extends StatelessWidget {
                             width: 275.0,
                             height: 275.0,
                             fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
                               if (loadingProgress == null) {
                                 return child;
                               } else {
@@ -79,7 +82,8 @@ class HistoriaCard extends StatelessWidget {
                     width: 50.0,
                     height: 50.0,
                     fit: BoxFit.cover,
-                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
                       if (loadingProgress == null) {
                         return child;
                       } else {
@@ -103,21 +107,16 @@ class HistoriaCard extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
+            /* IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                /* Navigator.push(
+                Navigator.push(
                   context,
                   CupertinoPageRoute(
-                      builder: (context) => EditPScreen(
-                            title: 'ACTUALIZACIÓN DE DATOS',
-                            user: user,
-                            paciente: false,
-                            edit: true,
-                          )),
-                ); */
+                      builder: (context) => const CreateEFScreen()),
+                );
               },
-            ),
+            ), */
             IconButton(
               icon: const Icon(Icons.visibility),
               onPressed: () {
@@ -127,7 +126,6 @@ class HistoriaCard extends StatelessWidget {
                     builder: (context) => ShowHScreen(
                       user: user,
                       historia: historia,
-                      
                     ),
                   ),
                 );
