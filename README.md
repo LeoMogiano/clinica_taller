@@ -32,32 +32,32 @@ Check out some screenshots of the platform below.
 
 *Dashboard*
 
-<img loading="lazy" width="50%" src="./screenshots/s1.png" alt="Login" />
+<img loading="lazy" width="35%" src="./screenshots/s1.png" alt="Login" />
 
 *User Management*
 
-<img loading="lazy" width="50%" src="./screenshots/s2.png" alt="User Management" />
+<img loading="lazy" width="35%" src="./screenshots/s2.png" alt="User Management" />
 
 *User Form*
 
-<img loading="lazy" width="50%" src="./screenshots/s3.png" alt="User Form" />
+<img loading="lazy" width="35%" src="./screenshots/s3.png" alt="User Form" />
 
 *Profile Screen*
 
-<img loading="lazy" width="50%" src="./screenshots/s4.png" alt="Profile Screen" />
+<img loading="lazy" width="35%" src="./screenshots/s4.png" alt="Profile Screen" />
 
 *Emergency Information*
 
-<img loading="lazy" width="50%" src="./screenshots/s5.png" alt="Emergency Information" />
+<img loading="lazy" width="35%" src="./screenshots/s5.png" alt="Emergency Information" />
 
 *Facial Identication*
 
-<img loading="lazy" width="50%" src="./screenshots/s6.png" alt="Facial Identication" />
+<img loading="lazy" width="35%" src="./screenshots/s6.png" alt="Facial Identication" />
 
 *Medic History*
 
-<img loading="lazy" width="50%" src="./screenshots/s7.png" alt="Medic History" />
-<img loading="lazy" width="50%" src="./screenshots/s8.png" alt="Medic History" />
+<img loading="lazy" width="35%" src="./screenshots/s7.png" alt="Medic History" />
+<img loading="lazy" width="35%" src="./screenshots/s8.png" alt="Medic History" />
 
 ## Contributions
 
