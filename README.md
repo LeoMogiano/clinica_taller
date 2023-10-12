@@ -28,36 +28,17 @@ This is a mobile application developed with Flutter to manage information relate
 
 ## Screenshots
 
-Check out some screenshots of the platform below.
+| **Dashboard** | **User Management** | **User Form** |
+|:-------------------:|:--------------------------:|:----------------:|
+| ![Dashboard](./screenshots/s1.png) | ![User Management](./screenshots/s2.png) | ![User Form](./screenshots/s3.png) |
 
-*Dashboard*
+| **Profile Screen** | **Emergency Information** | **Facial Identification** |
+|:-----------------------:|:---------------------------------:|:--------------------------------------:|
+| ![Profile Screen](./screenshots/s4.png) | ![Emergency Information](./screenshots/s5.png) | ![Facial Identification](./screenshots/s6.png) |
 
-<img loading="lazy" width="35%" src="./screenshots/s1.png" alt="Login" />
-
-*User Management*
-
-<img loading="lazy" width="35%" src="./screenshots/s2.png" alt="User Management" />
-
-*User Form*
-
-<img loading="lazy" width="35%" src="./screenshots/s3.png" alt="User Form" />
-
-*Profile Screen*
-
-<img loading="lazy" width="35%" src="./screenshots/s4.png" alt="Profile Screen" />
-
-*Emergency Information*
-
-<img loading="lazy" width="35%" src="./screenshots/s5.png" alt="Emergency Information" />
-
-*Facial Identication*
-
-<img loading="lazy" width="35%" src="./screenshots/s6.png" alt="Facial Identication" />
-
-*Medic History*
-
-<img loading="lazy" width="35%" src="./screenshots/s7.png" alt="Medic History" />
-<img loading="lazy" width="35%" src="./screenshots/s8.png" alt="Medic History" />
+| **Medic History 1** | **Medic History 2** |
+|:-----------------------:|:-----------------------:|
+| ![Medic History 1](./screenshots/s7.png) | ![Medic History 2](./screenshots/s8.png) |
 
 ## Contributions
 
