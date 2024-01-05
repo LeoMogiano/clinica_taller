@@ -1,5 +1,7 @@
 # Emergency Management Mobile Application
 
+[English](./README.md) | [Español](./README.es.md) | [Français](./README.fr.md) | [日本語](./README.jp.md)
+
 This is a mobile application developed with Flutter to manage information related to emergencies in a medical setting. The application provides various features to facilitate patient care and tracking in emergency situations.
 
 ## Key Features
