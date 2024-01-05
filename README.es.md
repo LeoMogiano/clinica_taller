@@ -38,7 +38,7 @@ Esta es una aplicación móvil desarrollada con Flutter para gestionar informaci
 |:-----------------------:|:---------------------------------:|:--------------------------------------:|
 | ![Profile Screen](./screenshots/s4.png) | ![Emergency Information](./screenshots/s5.png) | ![Facial Identification](./screenshots/s6.png) |
 
-| **Historial Médico 1 ** | **Historial Médico 2** |
+| **Historial Médico 1** | **Historial Médico 2** |
 |:-----------------------:|:-----------------------:|
 | ![Medic History 1](./screenshots/s7.png) | ![Medic History 2](./screenshots/s8.png) |
 
