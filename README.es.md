@@ -14,7 +14,7 @@ Esta es una aplicación móvil desarrollada con Flutter para gestionar informaci
 
 - **Gestión de Emergencias**: Proporciona un módulo para gestionar emergencias entrantes con información detallada sobre la emergencia y el paciente.
 
-- **Historias Clínicas ElectrónicaS**: Gestiona los registros de historias clínicas electrónicas de pacientes, tanto asegurados como nuevos.
+- **Historias Clínicas Electrónicas**: Gestiona los registros de historias clínicas electrónicas de pacientes, tanto asegurados como nuevos.
 
 ## Requisitos de Instalación
 
